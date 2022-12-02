@@ -1,2 +1,3 @@
+"""Не знаю зачем"""
 from . import users
-from . import calls
+from . import proposals

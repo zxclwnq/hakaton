@@ -1,15 +1,15 @@
 from flask import jsonify
 from flask_restful import Resource, reqparse, abort
 from data import db_session
-from .calls import Call
+from .proposals import Proposal
 
 parser = reqparse.RequestParser()
 parser.add_argument('message', required=True)
 parser.add_argument('address', required=True)
-
+"""Не совсем понимаю, попробуйте порыться"""
 def abort_if_call_not_found(id):
     session = db_session.create_session()
-    call = session.query(Call).get(id)
+    call = session.query(Proposal).get(id)
     if not call:
         abort(404, message=f"Call {id} not found")
 
@@ -26,7 +26,7 @@ class CallResource(Resource):
         """
         abort_if_call_not_found(id)
         session = db_session.create_session()
-        call = session.query(Call).get(id)
+        call = session.query(Proposal).get(id)
         return jsonify({'call': call.to_dict(
             only=('id', 'message', 'address', 'point', 'service', 'status', 'call_time', 'finish_time'))
         })
@@ -42,7 +42,7 @@ class CallListResource(Resource):
         :return:  json c информауией о вызовах
         """
         session = db_session.create_session()
-        calls = session.query(Call).all()
+        calls = session.query(Proposal).all()
         return jsonify({'calls': [item.to_dict(
             only=('id', 'message', 'address', 'point', 'service', 'status', 'call_time', 'finish_time'))
             for item in calls]})
@@ -54,7 +54,7 @@ class CallListResource(Resource):
         """
         args = parser.parse_args()
         session = db_session.create_session()
-        call = Call(
+        call = Proposal(
             message=args['message'],
             address=args['address']
         )

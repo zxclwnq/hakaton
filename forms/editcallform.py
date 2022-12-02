@@ -1,16 +1,12 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SubmitField, RadioField, DateTimeField, IntegerField, SelectField
 from wtforms.validators import DataRequired
-from forms.geo_validators import AddressRequired
-from tables import translateT
 
+"""Разберитесь с полями"""
 class EditCallForm(FlaskForm):
     message = TextAreaField('Сообщение', validators=[DataRequired(message="Поле 'сообщение' не может быть пустым")])
     address = StringField('Адрес', validators=[DataRequired(message="Поле 'адрес' не может быть пустым"),
-                                                            AddressRequired(unique=True)])
-    service = SelectField(u'Тема',
-                          choices=
-                          [(x, x) for x in translateT.values()])
+                                                            AddressRequired(unique=True)]) #тут адрес был
     status = RadioField('Статус',
                         choices=[('received', 'Принят'), ('serviced', 'Выполняется'), ('finished', 'Завершен')])
     answer = StringField('Ответ')

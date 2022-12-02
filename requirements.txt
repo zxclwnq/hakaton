@@ -4,8 +4,6 @@ chardet
 click
 Flask
 Flask-Login
-Flask-Moment
-Flask-RESTful
 Flask-WTF
 greenlet
 idna

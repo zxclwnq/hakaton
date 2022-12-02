@@ -2,11 +2,10 @@ import os
 import datetime
 from flask import Flask, render_template, redirect, request, abort, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from flask_moment import Moment
 from sqlalchemy import desc
 
 from data import db_session, call_resource
-from data.calls import Call
+from data.proposals import Proposal
 from data.users import User
 from forms.addcallform import AddCallForm
 from forms.editcallform import EditCallForm
@@ -15,7 +14,6 @@ from forms.loginform import LoginForm
 from forms.registerform import RegisterForm
 
 app = Flask(__name__)
-moment = Moment(app)
 app.config['SECRET_KEY'] = 'abcdef'
 app.config['JSON_AS_ASCII'] = False
 login_manager = LoginManager()
@@ -23,19 +21,24 @@ login_manager.init_app(app)
 
 
 @login_manager.user_loader
-def load_user(user_id):
+def load_user(user_id):  # find user in database
     db_sess = db_session.create_session()
     return db_sess.query(User).get(user_id)
 
 
 @app.errorhandler(404)
-def not_found(error):
+def not_found(error):  # Error 404
     return render_template('404.html', title='Страница не найдена'), 404
 
 
 @app.errorhandler(401)
-def unauthorized_access(error):
+def unauthorized_access(error):  # Access error
     return redirect('/login')
+
+
+"""Серёжа, подумай, нам нужна регистрация, если нет, то удаляй её
+↓
+"""
 
 
 @app.route('/new_proposal', methods=['GET', 'POST'])
@@ -55,7 +58,6 @@ def register():
             name=form.name.data,
             surname=form.surname.data,
             position=form.position.data,
-            locality=form.locality.data,
             email=form.email.data
         )
         user.set_password(form.password.data)
@@ -63,6 +65,12 @@ def register():
         db_sess.commit()
         return redirect('/login')
     return render_template('register.html', title='Регистрация', form=form)
+
+
+"""
+Это я не помню где вообще было, вроде бы нигде
+↓
+"""
 
 
 @app.route('/users/<int:id>', methods=['GET', 'POST'])
@@ -106,7 +114,7 @@ def edit_user(id):
 
 
 @app.route('/login', methods=['GET', 'POST'])
-def login():
+def login():  # Auth of experts and administrator
     form = LoginForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
@@ -122,99 +130,89 @@ def login():
 
 @app.route('/logout')
 @login_required
-def logout():
+def logout():  # exit
     logout_user()
     return redirect("/")
 
 
-#@app.route('/map')
 @app.route('/')
-def index():
+def index():  # main page
     db_sess = db_session.create_session()
-    calls = db_sess.query(Call).filter(Call.status != 'finished').all()
+    calls = db_sess.query(Proposal).filter(Proposal.status != 'finished').all()
     db_sess.commit()
-    calls_for_js = []
-    '''for call in calls:
-        if call.point:
-            coord = [float(x) for x in call.point.split()]
-            coord[1], coord[0] = coord[0], coord[1]
-            theme_number = [k for k, v in translateT.items() if v == call.service][0]
-            calls_for_js.append([coord, themeToCat[theme_number], call.id if current_user.is_authenticated else 0])'''
-
-    return render_template('map.html', calls=calls_for_js)
+    return render_template('main.html')
 
 
 @app.route('/add_proposal', methods=['GET', 'POST'])
 @login_required
-def add_proposal():
+def add_proposal():  # new proposal
     form = AddCallForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        call = Call()
+        call = Proposal()
         call.message = form.message.data
         call.address = form.address.data
         call.recognize_call()
         db_sess.add(call)
         db_sess.commit()
         return redirect('/calls')
-    return render_template('add_call.html', title='Новый вызов',
+    return render_template('add_proposal.html', title='Новый вызов',
                            form=form)
 
 
 @app.route('/proposals/<int:call_id>', methods=['GET', 'POST'])
 @login_required
-def edit_proposal(call_id):
+def edit_proposal(call_id):  # edit existing proposal (i.e., edit grading)
     form = EditCallForm()
     if request.method == "GET":
         db_sess = db_session.create_session()
-        call = db_sess.query(Call).filter(Call.id == call_id).first()
-        if call:
-            form.message.data = call.message
-            form.address.data = call.address
-            form.service.data = call.service
-            form.status.data = call.status
-            form.answer.data = call.answer
-            form.call_id.data = call.id
-            form.call_time.data = call.call_time
-            form.finish_time.data = call.finish_time
-            if call.point:
-                x, y = call.point.split()
+        proposal = db_sess.query(Proposal).filter(Proposal.id == call_id).first()
+        if proposal:
+            form.message.data = proposal.message
+            form.address.data = proposal.address
+            form.service.data = proposal.service
+            form.status.data = proposal.status
+            form.answer.data = proposal.answer
+            form.call_id.data = proposal.id
+            form.call_time.data = proposal.call_time
+            form.finish_time.data = proposal.finish_time
+            if proposal.point:
+                x, y = proposal.point.split()
                 form.point.data = f"{x},{y}"
         else:
             abort(404)
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        call = db_sess.query(Call).filter(Call.id == call_id).first()
-        if call:
-            call.message = form.message.data
-            call.service = form.service.data
-            call.answer = form.answer.data
-            call.change_address(form.address.data)
-            call.change_status(form.status.data)
+        proposal = db_sess.query(Proposal).filter(Proposal.id == call_id).first()
+        if proposal:
+            proposal.message = form.message.data
+            proposal.service = form.service.data
+            proposal.answer = form.answer.data
+            proposal.change_address(form.address.data)
+            proposal.change_status(form.status.data)
             db_sess.commit()
             return redirect('/calls')
         else:
             abort(404)
     return render_template('edit_proposal.html',
                            title='Редактирование вызова',
-                           form=form
-                           )
+                           form=form)
 
 
 @app.route('/proposals')
 @login_required
 def proposals():
     db_sess = db_session.create_session()
-    calls = db_sess.query(Call).order_by(desc(Call.call_time)).all()
+    calls = db_sess.query(Proposal).order_by(desc(Proposal.call_time)).all()
     db_sess.commit()
-    return render_template('calls.html', calls=calls, time_now=datetime.datetime.today())
+    return render_template('proposals.html', calls=calls, time_now=datetime.datetime.today())
 
 
 @app.route('/delete_proposal/<int:call_id>', methods=['GET', 'POST'])
 @login_required
-def delete_proposal(call_id):
+def delete_proposal(call_id):  # delete proposal (e.g. copy of someone's work)
     db_sess = db_session.create_session()
-    call = db_sess.query(Call).filter(Call.id == call_id).first()
+    call = db_sess.query(Proposal).filter(Proposal.id == call_id).first()
     if call:
         db_sess.delete(call)
         db_sess.commit()
@@ -223,11 +221,12 @@ def delete_proposal(call_id):
     return redirect('/calls')
 
 
-@app.route('/proposals/post', methods=['POST'])
 # def add_proposal():
 # return call_process()
 
-def main():
+"""Сейчас не заработает из-за ошибок в полях с адресом"""
+@app.route('/proposals/post', methods=['POST'])
+def main():  # run program
     db_session.global_init("emergency.db")
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
