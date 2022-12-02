@@ -38,7 +38,7 @@ def not_found(error):
 
 @app.errorhandler(401)
 def unauthorized_access(error):
-        return redirect('/login')
+    return redirect('/login')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -227,15 +227,14 @@ def delete_proposal(call_id):
 
 
 @app.route('/calls/post', methods=['POST'])
-#def add_proposal():
-    #return call_process()
-
+# def add_proposal():
+# return call_process()
 
 def main():
     db_session.global_init("emergency.db")
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
-    #app.run(port=port, debug=True)
+    # app.run(port=port, debug=True)
 
 
 if __name__ == '__main__':
