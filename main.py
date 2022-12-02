@@ -30,10 +30,7 @@ def load_user(user_id):
 
 @app.errorhandler(404)
 def not_found(error):
-    if request.path.startswith('/api/'):
-        return jsonify({'error': 'url not found'}), 404
-    else:
-        return render_template('404.html', title='Страница не найдена'), 404
+    return render_template('404.html', title='Страница не найдена'), 404
 
 
 @app.errorhandler(401)
@@ -41,7 +38,7 @@ def unauthorized_access(error):
     return redirect('/login')
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/new_proposal', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
@@ -130,24 +127,24 @@ def logout():
     return redirect("/")
 
 
-@app.route('/map')
+#@app.route('/map')
 @app.route('/')
 def index():
     db_sess = db_session.create_session()
     calls = db_sess.query(Call).filter(Call.status != 'finished').all()
     db_sess.commit()
     calls_for_js = []
-    for call in calls:
+    '''for call in calls:
         if call.point:
             coord = [float(x) for x in call.point.split()]
             coord[1], coord[0] = coord[0], coord[1]
             theme_number = [k for k, v in translateT.items() if v == call.service][0]
-            calls_for_js.append([coord, themeToCat[theme_number], call.id if current_user.is_authenticated else 0])
+            calls_for_js.append([coord, themeToCat[theme_number], call.id if current_user.is_authenticated else 0])'''
 
     return render_template('map.html', calls=calls_for_js)
 
 
-@app.route('/add_call', methods=['GET', 'POST'])
+@app.route('/add_proposal', methods=['GET', 'POST'])
 @login_required
 def add_proposal():
     form = AddCallForm()
@@ -164,7 +161,7 @@ def add_proposal():
                            form=form)
 
 
-@app.route('/calls/<int:call_id>', methods=['GET', 'POST'])
+@app.route('/proposals/<int:call_id>', methods=['GET', 'POST'])
 @login_required
 def edit_proposal(call_id):
     form = EditCallForm()
@@ -198,13 +195,13 @@ def edit_proposal(call_id):
             return redirect('/calls')
         else:
             abort(404)
-    return render_template('edit_call.html',
+    return render_template('edit_proposal.html',
                            title='Редактирование вызова',
                            form=form
                            )
 
 
-@app.route('/calls')
+@app.route('/proposals')
 @login_required
 def proposals():
     db_sess = db_session.create_session()
@@ -213,7 +210,7 @@ def proposals():
     return render_template('calls.html', calls=calls, time_now=datetime.datetime.today())
 
 
-@app.route('/delete_call/<int:call_id>', methods=['GET', 'POST'])
+@app.route('/delete_proposal/<int:call_id>', methods=['GET', 'POST'])
 @login_required
 def delete_proposal(call_id):
     db_sess = db_session.create_session()
@@ -226,7 +223,7 @@ def delete_proposal(call_id):
     return redirect('/calls')
 
 
-@app.route('/calls/post', methods=['POST'])
+@app.route('/proposals/post', methods=['POST'])
 # def add_proposal():
 # return call_process()
 
