@@ -1,13 +1,10 @@
 import os
 import datetime
-import joblib
 from flask import Flask, render_template, redirect, request, abort, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_moment import Moment
-from flask_restful import Api
 from sqlalchemy import desc
 
-from alice2 import call_process
 from data import db_session, call_resource
 from data.calls import Call
 from data.users import User
@@ -16,17 +13,13 @@ from forms.editcallform import EditCallForm
 from forms.edituserform import EditUserForm
 from forms.loginform import LoginForm
 from forms.registerform import RegisterForm
-from tables import *
 
 app = Flask(__name__)
-api = Api(app)
 moment = Moment(app)
 app.config['SECRET_KEY'] = 'abcdef'
 app.config['JSON_AS_ASCII'] = False
 login_manager = LoginManager()
 login_manager.init_app(app)
-theme_clf = joblib.load('themes_clf')
-cat_clf = joblib.load('cat_clf')
 
 
 @login_manager.user_loader
@@ -156,7 +149,7 @@ def index():
 
 @app.route('/add_call', methods=['GET', 'POST'])
 @login_required
-def add_call():
+def add_proposal():
     form = AddCallForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
@@ -173,7 +166,7 @@ def add_call():
 
 @app.route('/calls/<int:call_id>', methods=['GET', 'POST'])
 @login_required
-def edit_call(call_id):
+def edit_proposal(call_id):
     form = EditCallForm()
     if request.method == "GET":
         db_sess = db_session.create_session()
@@ -213,7 +206,7 @@ def edit_call(call_id):
 
 @app.route('/calls')
 @login_required
-def calls():
+def proposals():
     db_sess = db_session.create_session()
     calls = db_sess.query(Call).order_by(desc(Call.call_time)).all()
     db_sess.commit()
@@ -222,7 +215,7 @@ def calls():
 
 @app.route('/delete_call/<int:call_id>', methods=['GET', 'POST'])
 @login_required
-def delete_call(call_id):
+def delete_proposal(call_id):
     db_sess = db_session.create_session()
     call = db_sess.query(Call).filter(Call.id == call_id).first()
     if call:
@@ -234,14 +227,12 @@ def delete_call(call_id):
 
 
 @app.route('/calls/post', methods=['POST'])
-def alice_add_call():
-    return call_process()
+#def add_proposal():
+    #return call_process()
 
 
 def main():
     db_session.global_init("emergency.db")
-    api.add_resource(call_resource.CallListResource, '/api/calls')
-    api.add_resource(call_resource.CallResource, '/api/calls/<int:id>')
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
     #app.run(port=port, debug=True)
