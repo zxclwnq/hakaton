@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="/static/favicon.svg" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=40d1649f-0493-4b70-98ba-98533de7710b&lang=ru_RU&load=Geolink"></script>
+    {{ moment.include_moment() }}
+    <title>{{title}}</title>
+    {% block head %}
+    {% endblock %}
+</head>
+  <body>
+    <header>
+      <nav class="navbar navbar-light bg-light">
+          <img src="/static/favicon.svg" height = "70px">
+          <h1>Активный гражданин Оренбургской области </h1>
+          <a class="nav-brand" href="/map">Карта коммунальных проблем</a>
+          {% if current_user.is_authenticated %}
+          <div class="nav-item dropdown">
+          <a class="nav-brand dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Сообщения </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="/calls">Список сообщений</a>
+                    <a class="dropdown-item" href="/add_call">Новое сообщение</a>
+                </div>
+          </div>
+          <a class="navbar-link" href="/users/{{current_user.id}}">{{current_user.name}} {{current_user.surname}}</a>
+          <a class="navbar-link" href="/logout">Выход</a>
+          {% else %}
+            <p>
+                <a class="btn btn-success" href="/login">Войти</a>
+                <a class="btn btn-primary " href="/register">Зарегистрироваться</a>
+            </p>
+          {% endif %}
+      </nav>
+    </header>
+    <!-- Begin page content -->
+    <main role="main" class="container">
+        {% block content %}
+        {% endblock %}
+    </main>
+  </body>
+</html>
