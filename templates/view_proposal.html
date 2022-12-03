@@ -20,106 +20,114 @@
 <h2 align="center">Заявка № {{proposal.id}}</h2>
 <br>
 <p>  <a href="{{proposal.file}}"> Работа</a></p>
-{% if proposal.type == "text" %}
-<div class="table_container">
-    <table class="my_table">
-        <tr class="my_column">
-            <th class="title" width="50%" bgcolor="#dddddd" align="center">Параметры оценивания</th>
-            <th class="title" width="50%" bgcolor="#dddddd" align="center">Оценка</th>
-        </tr>
-        <tr class="my_column">
-            <td class="title" width="50%" bgcolor="#dddddd" align="center">Актуальность</td>
-            <td class="ordinary" style="color:{{text_color}}">{{ proposal.evaluation_dict['relevance'] }}</td>
-        </tr>
-        <tr class="my_column">
-            <td class="title" width="50%" bgcolor="#dddddd" align="center">Цельность</td>
-            <td class="ordinary" style="color:{{text_color}}">{{ proposal.evaluation_dict['integrity'] }}</td>
-        </tr>
-        <tr class="my_column">
-            <td class="title" width="50%" bgcolor="#dddddd" align="center">Аргументированность</td>
-            <td class="ordinary" style="color:{{text_color}}">{{ proposal.evaluation_dict['validity'] }}</td>
-        </tr>
-        <tr class="my_column">
-            <td class="title" width="50%" bgcolor="#dddddd" align="center">Резонансность</td>
-            <td class="ordinary" style="color:{{text_color}}">{{ proposal.evaluation_dict['resonance'] }}</td>
-        </tr>
-        <tr class="my_column">
-            <td class="title" width="50%" bgcolor="#dddddd" align="center">Точность и доходчивость</td>
-            <td class="ordinary" style="color:{{text_color}}">{{ proposal.evaluation_dict['accuracy'] }}</td>
-        </tr>
-        <tr class="my_column">
-            <td class="title" width="50%" bgcolor="#dddddd" align="center">Профессионально-этический подход</td>
-            <td class="ordinary" style="color:{{text_color}}">{{ proposal.evaluation_dict['ethnicity'] }}</td>
-        </tr>
-        <tr class="my_column">
-            <td class="title" width="50%" bgcolor="#dddddd" align="center">Доступность</td>
-            <td class="ordinary"  style="color:{{text_color}}">{{ proposal.evaluation_dict['availability'] }}</td>
-        </tr>
-        <tr class="my_column">
-            <td class="title" width="50%" bgcolor="#dddddd" align="center">Цикл материалов</td>
-            <td class="ordinary" style="color:{{text_color}}">{{ proposal.evaluation_dict['materials cycle'] }}</td>
-        </tr>
-    </table>
-{% else %}
-</div>
-<div class="table_container">
-    <table class="my_table">
-        <tr class="my_column">
-            <th class="title" width="50%" bgcolor="#dddddd" align="center">Параметры оценивания</th>
-            <th class="title" width="50%" bgcolor="#dddddd" align="center">Оценка</th>
-        </tr>
-        <tr class="my_column">
-            <td class="title" width="50%" bgcolor="#dddddd" align="center">Выражение мысли</td>
-            <td class="ordinary"  style="color:{{text_color}}">{{ proposal.evaluation_dict['expression_of_thought'] }}</td>
-        </tr>
-        <tr class="my_column">
-            <td class="title" width="50%" bgcolor="#dddddd" align="center">Единство передачи</td>
-            <td class="ordinary"  style="color:{{text_color}}">{{ proposal.evaluation_dict['integrity'] }}</td>
-        </tr>
-        <tr class="my_column">
-            <td class="title" width="50%" bgcolor="#dddddd" align="center">Персонифицированный подход</td>
-            <td class="ordinary"  style="color:{{text_color}}">{{ proposal.evaluation_dict['personalized_character'] }}</td>
-        </tr>
-        <tr class="my_column">
-            <td class="title" width="50%" bgcolor="#dddddd" align="center">Художественные приемы</td>
-            <td class="ordinary"  style="color:{{text_color}}">{{ proposal.evaluation_dict['artistic_techniques'] }}</td>
-        </tr>
-        <tr class="my_column">
-            <td class="title" width="50%" bgcolor="#dddddd" align="center">Работа оператора</td>
-            <td class="ordinary"  style="color:{{text_color}}">{{ proposal.evaluation_dict['operators_work'] }}</td>
-        </tr>
-    </table>
-</div>
-{% endif %}
+{% for expert_rating in proposal.merge_ratings %}
+    {% set RATINGS = expert_rating[0]%}
+    {% set LOW_RATINGS = expert_rating[1]%}
+    {% set EXPERT = expert_rating[2]%}
+    {% set EXPERT_SCORE = expert_rating[3]%}
+    {% if proposal.type == "text" %}
+    <div class="table_container">
+        <table class="my_table">
+            <tr class="my_column">
+                <th class="title" width="50%" bgcolor="#dddddd" align="center">Параметры оценивания</th>
+                <th class="title" width="50%" bgcolor="#dddddd" align="center">Оценка</th>
+            </tr>
+            <tr class="my_column">
+                <td class="title" width="50%" bgcolor="#dddddd" align="center">Актуальность</td>
+                <td class="ordinary" style="color:{{text_color}}">{{ RATINGS['relevance'] }}</td>
+            </tr>
+            <tr class="my_column">
+                <td class="title" width="50%" bgcolor="#dddddd" align="center">Цельность</td>
+                <td class="ordinary" style="color:{{text_color}}">{{ RATINGS['integrity'] }}</td>
+            </tr>
+            <tr class="my_column">
+                <td class="title" width="50%" bgcolor="#dddddd" align="center">Аргументированность</td>
+                <td class="ordinary" style="color:{{text_color}}">{{ RATINGS['validity'] }}</td>
+            </tr>
+            <tr class="my_column">
+                <td class="title" width="50%" bgcolor="#dddddd" align="center">Резонансность</td>
+                <td class="ordinary" style="color:{{text_color}}">{{ RATINGS['resonance'] }}</td>
+            </tr>
+            <tr class="my_column">
+                <td class="title" width="50%" bgcolor="#dddddd" align="center">Точность и доходчивость</td>
+                <td class="ordinary" style="color:{{text_color}}">{{ RATINGS['accuracy'] }}</td>
+            </tr>
+            <tr class="my_column">
+                <td class="title" width="50%" bgcolor="#dddddd" align="center">Профессионально-этический подход</td>
+                <td class="ordinary" style="color:{{text_color}}">{{ RATINGS['ethnicity'] }}</td>
+            </tr>
+            <tr class="my_column">
+                <td class="title" width="50%" bgcolor="#dddddd" align="center">Доступность</td>
+                <td class="ordinary"  style="color:{{text_color}}">{{ RATINGS['availability'] }}</td>
+            </tr>
+            <tr class="my_column">
+                <td class="title" width="50%" bgcolor="#dddddd" align="center">Цикл материалов</td>
+                <td class="ordinary" style="color:{{text_color}}">{{ RATINGS['materials cycle'] }}</td>
+            </tr>
+        </table>
+    {% else %}
+    </div>
+    <div class="table_container">
+        <table class="my_table">
+            <tr class="my_column">
+                <th class="title" width="50%" bgcolor="#dddddd" align="center">Параметры оценивания</th>
+                <th class="title" width="50%" bgcolor="#dddddd" align="center">Оценка</th>
+            </tr>
+            <tr class="my_column">
+                <td class="title" width="50%" bgcolor="#dddddd" align="center">Выражение мысли</td>
+                <td class="ordinary"  style="color:{{text_color}}">{{ RATINGS['expression_of_thought'] }}</td>
+            </tr>
+            <tr class="my_column">
+                <td class="title" width="50%" bgcolor="#dddddd" align="center">Единство передачи</td>
+                <td class="ordinary"  style="color:{{text_color}}">{{ RATINGS['integrity'] }}</td>
+            </tr>
+            <tr class="my_column">
+                <td class="title" width="50%" bgcolor="#dddddd" align="center">Персонифицированный подход</td>
+                <td class="ordinary"  style="color:{{text_color}}">{{ RATINGS['personalized_character'] }}</td>
+            </tr>
+            <tr class="my_column">
+                <td class="title" width="50%" bgcolor="#dddddd" align="center">Художественные приемы</td>
+                <td class="ordinary"  style="color:{{text_color}}">{{ RATINGS['artistic_techniques'] }}</td>
+            </tr>
+            <tr class="my_column">
+                <td class="title" width="50%" bgcolor="#dddddd" align="center">Работа оператора</td>
+                <td class="ordinary"  style="color:{{text_color}}">{{ RATINGS['operators_work'] }}</td>
+            </tr>
+        </table>
+    </div>
+    {% endif %}
 
-<div class="table_container">
-    <table class="my_table">
-        <tr class="my_column">
-            <th class="title" width="50%" bgcolor="#dddddd" align="center">Параметры понижения</th>
-            <th class="title" width="50%" bgcolor="#dddddd" align="center">Оценка</th>
-        </tr>
-        <tr class="my_column">
-            <td class="title" width="50%" bgcolor="#dddddd" align="center">Рекламные материалы</td>
-            <td class="ordinary"  style="color:{{text_color}}">{{ proposal.lowering_criteria_dict['promotional materials'] }}</td>
-        </tr>
-        <tr class="my_column">
-            <td class="title" width="50%" bgcolor="#dddddd" align="center">Журналистские штампы</td>
-            <td class="ordinary"  style="color:{{text_color}}">{{ proposal.lowering_criteria_dict['journalistic stamps'] }}</td>
-        </tr>
-        <tr class="my_column">
-            <td class="title" width="50%" bgcolor="#dddddd" align="center">Заказной харатер</td>
-            <td class="ordinary"  style="color:{{text_color}}">{{ proposal.lowering_criteria_dict['сustom_nature'] }}</td>
-        </tr>
-        <tr class="my_column">
-            <td class="title" width="50%" bgcolor="#dddddd" align="center">Грамматические ошибки</td>
-            <td class="ordinary"  style="color:{{text_color}}">{{ proposal.lowering_criteria_dict['grammatical_errors'] }}</td>
-        </tr>
-        <tr class="my_column">
-            <td class="title" width="50%" bgcolor="#dddddd" align="center">Орфоэпические лексические нормы</td>
-            <td class="ordinary"  style="color:{{text_color}}">{{ proposal.lowering_criteria_dict['orthoepic_norms'] }}</td>
-        </tr>
-    </table>
-</div>
+    <div class="table_container">
+        <table class="my_table">
+            <tr class="my_column">
+                <th class="title" width="50%" bgcolor="#dddddd" align="center">Параметры понижения</th>
+                <th class="title" width="50%" bgcolor="#dddddd" align="center">Оценка</th>
+            </tr>
+            <tr class="my_column">
+                <td class="title" width="50%" bgcolor="#dddddd" align="center">Рекламные материалы</td>
+                <td class="ordinary"  style="color:{{text_color}}">{{ LOW_RATINGS['promotional materials'] }}</td>
+            </tr>
+            <tr class="my_column">
+                <td class="title" width="50%" bgcolor="#dddddd" align="center">Журналистские штампы</td>
+                <td class="ordinary"  style="color:{{text_color}}">{{ LOW_RATINGS['journalistic stamps'] }}</td>
+            </tr>
+            <tr class="my_column">
+                <td class="title" width="50%" bgcolor="#dddddd" align="center">Заказной харатер</td>
+                <td class="ordinary"  style="color:{{text_color}}">{{ LOW_RATINGS['сustom_nature'] }}</td>
+            </tr>
+            <tr class="my_column">
+                <td class="title" width="50%" bgcolor="#dddddd" align="center">Грамматические ошибки</td>
+                <td class="ordinary"  style="color:{{text_color}}">{{ LOW_RATINGS['grammatical_errors'] }}</td>
+            </tr>
+            <tr class="my_column">
+                <td class="title" width="50%" bgcolor="#dddddd" align="center">Орфоэпические лексические нормы</td>
+                <td class="ordinary"  style="color:{{text_color}}">{{ LOW_RATINGS['orthoepic_norms'] }}</td>
+            </tr>
+        </table>
+        <h4>Проверял: {{ EXPERT }} <br>Балл: {{ EXPERT_SCORE }}</h4>
+        <br>
+    </div>
+{% endfor %}
 <div>
     <h2>
         Средняя оценка: {{proposal.average_score}}

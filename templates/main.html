@@ -7,7 +7,7 @@
 
 {% block content %}
 {% set STAGE = {1:"Ожидается запуск",2:"Прием заявок",3:"Независимая экспертиза",4:"Завершение конкурса"}%}
-{% if current_user.is_authenticated and current_user.position == 'admin' %}
+{% if current_user.access_level == 3 %}
 
 <style>
 .ordinary {

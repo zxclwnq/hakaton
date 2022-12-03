@@ -19,6 +19,11 @@ class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
     status = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     likes = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     user_data = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+
+    @property
+    def annotation(self):
+        """Возвращает тему работы"""
+        return self.user_data_dict.get("annotation")
     @property
     def theme(self):
         """Возвращает тему работы"""
@@ -43,9 +48,22 @@ class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
         """Возвращает среднюю оценку заявки
         (Средняя оценка по критериям минус средняя оценка по понижающим критериям)
         """
-        return round(sum(self.evaluation_dict.values()) -\
-            sum(self.lowering_criteria_dict.values()),2)
-
+        sum = 0
+        for score in self.merge_ratings:
+            sum += score[3]
+        return round(sum / len(self.merge_ratings),2)
+    @property
+    def merge_ratings(self):
+        """Возвращает комбинированные оценки для заявки
+        """
+        ratings = self.evaluation_dict["ratings"]
+        lowering_ratings = self.lowering_criteria_dict["ratings"]
+        merged_ratings = []
+        for index in range(len(ratings)):
+            merged_ratings.append((ratings[index],lowering_ratings[index],ratings[index]["expert"],
+                                   sum(list(ratings[index].values())[:-1]) \
+                                   - sum(list(lowering_ratings[index].values())[:-1])))
+        return merged_ratings
     def verify_proposal(
             self,
             new_evaluation: dict,
@@ -54,7 +72,9 @@ class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
         """
         Закрывает оценивание заявки
         :param new_evaluation: новые оценки заявки
+        + указаны имя и фамилия эксперта
         :param new_lowering_criteria: новые понижающие оценки заявки
+        + указаны имя и фамилия эксперта
         :param new_status: новый статус заявки
         """
         self.change_evaluation(new_evaluation)
@@ -78,10 +98,10 @@ class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
         self.type = type
         self.file = file
         if type == 'text':
-            self.evaluation = json.dumps(evaluation_table_text_default)
+            self.evaluation = json.dumps({"ratings": []})
         else:
-            self.evaluation = json.dumps(evaluation_table_video_default)
-        self.lowering_criteria = json.dumps(lowering_criteria_default)
+            self.evaluation = json.dumps({"ratings": []})
+        self.lowering_criteria = json.dumps({"ratings": []})
         self.status = "waiting_verification"
         self.likes = 0
         self.user_data = json.dumps(user_data)
@@ -90,15 +110,22 @@ class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
         """
         Изменяет оценки заявке
         :param new_evaluation: новые оценки заявки
+        + указаны имя и фамилия эксперта
         """
-        self.evaluation = json.dumps(new_evaluation)
+        new_ratings = self.evaluation_dict["ratings"]
+        new_ratings.append(new_evaluation)
+        self.evaluation = json.dumps({"ratings":new_ratings})
 
     def change_lowering_criteria(self, new_lowering_criteria: dict):
         """
         Изменяет понижающие оценки заявки
         :param new_lowering_criteria: новые понижающие оценки заявки
+        + указаны имя и фамилия эксперта
         """
-        self.lowering_criteria = json.dumps(new_lowering_criteria)
+
+        new_ratings = self.lowering_criteria_dict["ratings"]
+        new_ratings.append(new_lowering_criteria)
+        self.lowering_criteria = json.dumps({"ratings":new_ratings})
 
     def change_status(self, new_status):
         """

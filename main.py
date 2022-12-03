@@ -87,20 +87,24 @@ def index():
 @app.route('/add_proposal', methods=['GET', 'POST'])
 def add_proposal():  # new proposal
     """Добавление заявки в БД"""
-    form = AddProposalForm()
-    if form.validate_on_submit():
-        db_sess = db_session.create_session()
-        new_proposal = Proposal()
+    global competition_stage
+    if competition_stage.can_make_proposes:
+        form = AddProposalForm()
+        if form.validate_on_submit():
+            db_sess = db_session.create_session()
+            new_proposal = Proposal()
 
-        proposal_id = random.randint(100,1000)# создание рандомного id
-        # заполнение пустой заявки данными из формы
-        new_proposal.make_proposal(proposal_id ,form.type.data, form.file.data, form.user_data)
+            proposal_id = random.randint(100,1000)# создание рандомного id
+            # заполнение пустой заявки данными из формы
+            new_proposal.make_proposal(proposal_id ,form.type.data, form.file.data, form.user_data)
 
-        # добавление заявки в БД
-        db_sess.add(new_proposal)
-        db_sess.commit()
-        return redirect("/proposals")
-    return render_template('add_proposal.html',form=form)
+            # добавление заявки в БД
+            db_sess.add(new_proposal)
+            db_sess.commit()
+            return redirect("/proposals")
+        return render_template('add_proposal.html',form=form)
+    else:
+        return render_template('locked.html', title='Страница не доступна')
 
 @app.route('/set_stage/<int:stage_id>', methods=['GET', 'POST'])
 @login_required
@@ -122,6 +126,8 @@ def eval_proposal(proposal_id): # Оценивание заявок экспер
     if form.validate_on_submit():
         ratings = form.get_text_rating if current_proposal.type == 'text' else form.get_video_rating
         lowering_ratings = form.get_lowering_rating
+        ratings["expert"] = f"{current_user.surname} {current_user.name}"
+        lowering_ratings["expert"] = f"{current_user.surname} {current_user.name}"
         current_proposal.verify_proposal(ratings,lowering_ratings,'verified')
         db_sess.commit()
         return redirect("/proposals")
@@ -136,10 +142,19 @@ def view_proposal(proposal_id):
 
 @app.route('/proposals')
 def proposals():
-    db_sess = db_session.create_session()
-    proposals = db_sess.query(Proposal).all()#.filter(Proposal.status == 'verified').all()
-    db_sess.commit()
-    return render_template('proposals.html', proposals=proposals)
+    if competition_stage.result_table_state == 0:
+        return render_template('locked.html', title='Страница не доступна')
+    elif competition_stage.result_table_state == 1:
+        db_sess = db_session.create_session()
+        proposals = db_sess.query(Proposal).all()
+        db_sess.commit()
+        return render_template('proposals_voting.html', proposals=proposals)
+    elif competition_stage.result_table_state == 2:
+        db_sess = db_session.create_session()
+        proposals = db_sess.query(Proposal).all()
+        db_sess.commit()
+        return render_template('proposals.html', proposals=proposals)
+    return render_template('locked.html', title='Произошла ошибка во время работы')
 
 
 @app.route('/delete_proposal/<int:proposal_id>', methods=['GET', 'POST'])

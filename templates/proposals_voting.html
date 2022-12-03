@@ -17,13 +17,13 @@
 <div class="table_container">
     <table class="my_table">
         <tr class="my_row">
-            <td class="title" width="2%" bgcolor="#dddddd" align="center">Id</td>
+            <td class="title" width="4%" bgcolor="#dddddd" align="center">Id</td>
             <td class="title" width="5%" bgcolor="#dddddd" align="center">Тип работы</td>
-            <td class="title" width="25%" bgcolor="#dddddd" align="center">Ссылка на работу</td>
+            <td class="title" width="8%" bgcolor="#dddddd" align="center">Ссылка на работу</td>
             <td class="title" width="25%" bgcolor="#dddddd" align="center">Тема работы</td>
-            <td class="title" width="6%" bgcolor="#dddddd" align="center">Статус</td>
-            <td class="title" width="6%" bgcolor="#dddddd" align="center">Средняя оценка</td>
-            <td class="title" width="8%" bgcolor="#dddddd" align="center">Действие</td>
+            <td class="title" width="35%" bgcolor="#dddddd" align="center">Аннотация к работе</td>
+            <td class="title" width="6%" bgcolor="#dddddd" align="center">Голоса</td>
+            <td class="title" width="8%" bgcolor="#dddddd" align="center">Отдать голос</td>
         </tr>
         {% for proposal in proposals %}
             {% if proposal.status != "verified" %}
@@ -36,24 +36,22 @@
         <tr class="my_row">
             <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">{{ proposal.id }}</td>
             <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ TYPES[proposal.type] }}</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}"><a href="{{proposal.file}}">{{ proposal.file }}</a></td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}"><a href="{{proposal.file}}"> Работа №{{proposal.id}}</a></td>
             <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.theme }}</td>
-            <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">{{ STATUSES[proposal.status] }}</td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.annotation }}</td>
+            <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">{{ proposal.likes }}</td>
+            {% if current_user.access_level >= 2 %}
+                <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">
+                        <div>       <a href="/proposals/rate/{{ proposal.id }}" class="btn btn-warning" >Оценить заявку</a>
+                    </div>
+                </td>
+            {% endif %}
+            {% if current_user.access_level < 2 %}
             <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">
-                {% if proposal.status == 'verified'%}
-                <div>    {{proposal.average_score}}
+                <div>       <a href="/proposals/view/{{ proposal.id }}" class="btn btn-warning" >+</a>
                 </div>
-                {% endif %}
             </td>
-            <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">
-                {% if proposal.status == 'verified'%}
-                <div>       <a href="/proposals/view/{{ proposal.id }}" class="btn btn-warning">Посмотреть результаты</a>
-                </div>
-                {% elif current_user.access_level >= 2 %}
-                <div>       <a href="/proposals/rate/{{ proposal.id }}" class="btn btn-warning">Оценить работу</a>
-                </div>
-                {% endif %}
-            </td>
+            {% endif %}
         </tr>
         {% endfor %}
     </table>

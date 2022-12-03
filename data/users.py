@@ -20,6 +20,16 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
                               index=True, unique=True, nullable=True)
     password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
 
+    @property
+    def access_level(self):
+        level = {
+            "admin":3,
+            "expert":2,
+            "moderator":1,
+            "user":0
+        }
+        return level[self.position]
+
     def set_password(self, password):
         self.password = password#generate_password_hash(password)
 
