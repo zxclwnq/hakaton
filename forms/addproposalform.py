@@ -28,5 +28,5 @@ class AddProposalForm(FlaskForm):
         "title": title,
         "annotation": annotation,
     }
-    
-    submit = SubmitField('Добавить сообщение')
+
+    submit = SubmitField('Отправить заявку')

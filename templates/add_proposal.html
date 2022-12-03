@@ -5,24 +5,87 @@
 <form action="" method="post">
     {{ form.hidden_tag() }}
     <p>
-        {{ form.message.label }}<br>
-        {{ form.message(class="form-control") }}<br>
-        {% for error in form.message.errors %}
+        {{ form.fullname.label }}<br>
+        {{ form.fullname(class="form-control") }}<br>
+        {% for error in form.fullname.errors %}
             <p class="alert alert-danger" role="alert">
                 {{ error }}
             </p>
         {% endfor %}
     </p>
     <p>
-        {{ form.address.label }}<br>
-        {{ form.address(class="form-control") }}<br>
-        {% for error in form.address.errors %}
+        {{ form.number.label }}<br>
+        {{ form.number(class="form-control") }}<br>
+        {% for error in form.number.errors %}
             <p class="alert alert-danger" role="alert">
                 {{ error }}
             </p>
         {% endfor %}
     </p>
+    <p>
+        {{ form.post.label }}<br>
+        {{ form.post(class="form-control") }}<br>
+        {% for error in form.post.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.place_of_work.label }}<br>
+        {{ form.place_of_work(class="form-control") }}<br>
+        {% for error in form.place_of_work.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.theme.label }}<br>
+        {{ form.theme(class="form-control") }}<br>
+        {% for error in form.theme.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.title.label }}<br>
+        {{ form.title(class="form-control") }}<br>
+        {% for error in form.title.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.annotation.label }}<br>
+        {{ form.annotation(class="form-control") }}<br>
+        {% for error in form.annotation.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.type.label }}<br>
+        {{ form.type(class="form-control") }}<br>
+        {% for error in form.type.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.file.label }}<br>
+        {{ form.file(class="form-control") }}<br>
+        {% for error in form.file.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+
     <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-    {{message}}
 </form>
 {% endblock %}
