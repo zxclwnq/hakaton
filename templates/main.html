@@ -6,46 +6,96 @@
 {% endblock %}
 
 {% block content %}
-{% set STAGES = {1:"Ожидается запуск",2:"Прием заявок",3:"Независимая экспертиза",4:"Завершение конкурса"}%}
-{% if current_user.position == 'admin' %}
+{% set STAGE = {1:"Ожидается запуск",2:"Прием заявок",3:"Независимая экспертиза",4:"Завершение конкурса"}%}
+{% if current_user.is_authenticated and current_user.position == 'admin' %}
+
+<style>
+.ordinary {
+    background-color: #d0daed;
+}
+.parent {
+  display: flex;
+  align-items: flex-start;
+  height: 100%;
+}
+.child-active {
+  background-color: green
+}
+.child {
+  width: 40%;
+  height: 40%;
+}
+</style>
     <h1>Панель управления</h1>
     <table class="my_table">
         <tr class="my_row">
-            <td class="title" width="2%" bgcolor="#dddddd" align="center">Текущая стадия конкурса</td>
+            <td class="title" width="5%" bgcolor="#dddddd" align="center">Текущая стадия конкурса</td>
             <td class="title" width="5%" bgcolor="#dddddd" align="center">Общее количество заявок заявок</td>
-            <td class="title" width="25%" bgcolor="#dddddd" align="center">Количество заявок которые прошли проверку</td>
+            <td class="title" width="5%" bgcolor="#dddddd" align="center">Количество заявок которые прошли проверку</td>
         </tr>
-        {% for proposal in proposals %}
-            {% if proposal.status != "verified" %}
-                {%  set color = "#dc143c" %}
-                {% set text_color = "#FFF0F5" %}
-            {% else %}
-                {% set color = "#d0daed"  %}
-                {% set text_color = "ffffff" %}
-            {% endif %}
         <tr class="my_row">
-            <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">{{ STAGE[stage.stage] }}</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ len(total_proposals) }}</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}"><a href="{{proposal.file}}">{{  }}</a></td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.theme }}</td>
-            <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">{{ STATUSES[proposal.status] }}</td>
-            <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">
-                {% if proposal.status == 'verified'%}
-                <div>    {{proposal.average_score}}
-                </div>
-                {% endif %}
-            </td>
-            <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">
-                {% if proposal.status == 'verified'%}
-                <div>       <a href="/proposals/view/{{ proposal.id }}" class="btn btn-warning">Посмотреть результаты</a>
-                </div>
-                {% elif current_user.is_authenticated %}
-                <div>       <a href="/proposals/rate/{{ proposal.id }}" class="btn btn-warning">Оценить работу</a>
-                </div>
-                {% endif %}
-            </td>
+            <td class="ordinary" align="center" style="color:{{text_color}}">{{ STAGE[stage.stage] }}</td>
+            <td class="ordinary" align="center" style="color:{{text_color}}">{{ total_proposals }}</td>
+            <td class="ordinary" align="center" style="color:{{text_color}}">{{ verified_proposes }}</td>
         </tr>
     </table>
+    <h2>Установить этап конкурса:</h2>
+    <div class="parent">
+        <a class="{{'btn btn-secondary'+ (stage.stage == 1) *' child-active'}}"href="/set_stage/1" >"Ожидается запуск"</a>
+        <a href="/set_stage/2" class="{{'btn btn-secondary'+ (stage.stage == 2) *' child-active'}}" *"child-active"}}">"Прием заявок"</a>
+        <a href="/set_stage/3" class="{{'btn btn-secondary'+ (stage.stage == 3) *' child-active'}}">"Независимая экспертиза"</a>
+        <a href="/set_stage/4" class="{{'btn btn-secondary'+ (stage.stage == 4) *' child-active'}}">"Завершение конкурса"</a>
+    </div>
+{% endif%}
+{% if stage.stage >=1%}
+<h2 style="margin:20px">
+    Анонс конкурса журналистов
+</h2>
+<p>
+    Мы анонсируем конкурс журналистов
+</p>
+<p>
+    Прием заявок будет проходить с 4.12.2022 по 10.12.2022
+    Экспертиза заявок будет длиться в течении двух недель
+</p>
+<p>
+    Во время экспертизы будет проходить народное голосование по участникам
+    После окончания экспертизы вы можете посмотреть результаты проверки экспертами ваших заявок
+</p>
+{% endif%}
+{% if stage.stage >=2%}
+<h2 style="margin:20px">
+    Стартовал прием заявок на наш конкурс
+</h2>
+<p>
+    Мы анонсируем прием заявок на наш конкурс
+</p>
+<p>
+    Прием заявок будет проходить с 4.12.2022 по 10.12.2022
+</p>
+{% endif%}
+{% if stage.stage >=3%}
+<h2 style="margin:20px">
+    Началась экспертиза поданных заявок
+</h2>
+<p>
+    Подача заявок завершена и поданные заявки будут рассмотренны экспертами
+</p>
+<p>
+    Экспертиза заявок будет проходить в течение двух недель паралельно
+    будет проходить народное голосование
+</p>
+{% endif%}
+{% if stage.stage >=4%}
+<h2 style="margin:20px">
+    Экспертиза и народное голосование оконченно
+</h2>
+<p>
+    Подведены итоги конкурса
+</p>
+<p>
+    Результаты оценивания можно посмотреть в общей таблице
+</p>
 {% endif%}
 {% endblock %}
 

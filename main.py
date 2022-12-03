@@ -75,7 +75,13 @@ def logout():  # exit
 @app.route('/')
 def index():
     """Запуск основой страцицы"""
-    return render_template('main.html')
+    db_sess = db_session.create_session()
+    total_proposals = db_sess.query(Proposal).all()
+    db_sess.commit()
+    verified_proposes = db_sess.query(Proposal).filter(Proposal.status == "verified").all()
+    return render_template('main.html',stage=competition_stage,
+                           total_proposals=len(total_proposals),
+                           verified_proposes=len(verified_proposes))
 
 
 @app.route('/add_proposal', methods=['GET', 'POST'])
@@ -96,7 +102,13 @@ def add_proposal():  # new proposal
         return redirect("/proposals")
     return render_template('add_proposal.html',form=form)
 
-
+@app.route('/set_stage/<int:stage_id>', methods=['GET', 'POST'])
+@login_required
+def set_stage(stage_id):
+    global competition_stage
+    competition_stage.set_stage(stage_id)
+    print(competition_stage.stage)
+    return redirect('/')
 
 """ Оценка заявок экспертами """
 @app.route('/proposals/rate/<int:proposal_id>', methods=['GET', 'POST'])

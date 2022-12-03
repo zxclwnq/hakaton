@@ -16,11 +16,7 @@
 </style>
 {% set STATUSES  = {"waiting_verification": "Требует оценки", "verified": "Оценена", "aborted":  "Отклонена"} %}
 
-<br>
-{% if current_user.is_authenticated %}
-    <a href="/add_call" class="btn btn-secondary">Новое сообщение</a>
-{% endif %}
-<br>
+
 <h2 align="center">Заявка № {{proposal.id}}</h2>
 <br>
 <p>  <a href="{{proposal.file}}"> Работа</a></p>
