@@ -113,7 +113,7 @@ def eval_proposal(proposal_id): # Оценивание заявок экспер
         current_proposal.verify_proposal(ratings,lowering_ratings,'verified')
         db_sess.commit()
         return redirect("/proposals")
-    return render_template("evaluate_proposal.html",type=current_proposal.type,form=form)
+    return render_template("evaluate_proposal.html",proposal=current_proposal,form=form)
 
 @app.route('/proposals/view/<int:proposal_id>', methods=['GET', 'POST'])
 def view_proposal(proposal_id):

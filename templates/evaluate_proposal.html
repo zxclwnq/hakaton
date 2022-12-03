@@ -4,7 +4,8 @@
 <h1>Оценка работы экспертом</h1>
 <form action="" method="post">
     {{ form.hidden_tag() }}
-    {% if type == "text" %}
+    <a href = "{{proposal.file}}">Ссылка на работу</a>
+    {% if proposal.type == "text" %}
         <h2>Параметры оценивания текста</h2>
         <p>
             {{ form.relevance.label }}<br>

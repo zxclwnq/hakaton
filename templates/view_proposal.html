@@ -11,7 +11,7 @@
 <meta charset="UTF-8">
 <style>
 .ordinary {
-    bgcolor: #d0daed;
+    background-color: #d0daed;
 }
 </style>
 {% set STATUSES  = {"waiting_verification": "Требует оценки", "verified": "Оценена", "aborted":  "Отклонена"} %}
@@ -74,23 +74,23 @@
         </tr>
         <tr class="my_column">
             <td class="title" width="50%" bgcolor="#dddddd" align="center">Выражение мысли</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.evaluation_dict['expression_of_thought'] }}</td>
+            <td class="ordinary"  style="color:{{text_color}}">{{ proposal.evaluation_dict['expression_of_thought'] }}</td>
         </tr>
         <tr class="my_column">
             <td class="title" width="50%" bgcolor="#dddddd" align="center">Единство передачи</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.evaluation_dict['integrity'] }}</td>
+            <td class="ordinary"  style="color:{{text_color}}">{{ proposal.evaluation_dict['integrity'] }}</td>
         </tr>
         <tr class="my_column">
             <td class="title" width="50%" bgcolor="#dddddd" align="center">Персонифицированный подход</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.evaluation_dict['personalized_character'] }}</td>
+            <td class="ordinary"  style="color:{{text_color}}">{{ proposal.evaluation_dict['personalized_character'] }}</td>
         </tr>
         <tr class="my_column">
             <td class="title" width="50%" bgcolor="#dddddd" align="center">Художественные приемы</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.evaluation_dict['artistic_techniques'] }}</td>
+            <td class="ordinary"  style="color:{{text_color}}">{{ proposal.evaluation_dict['artistic_techniques'] }}</td>
         </tr>
         <tr class="my_column">
             <td class="title" width="50%" bgcolor="#dddddd" align="center">Работа оператора</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.evaluation_dict['operators_work'] }}</td>
+            <td class="ordinary"  style="color:{{text_color}}">{{ proposal.evaluation_dict['operators_work'] }}</td>
         </tr>
     </table>
 </div>
@@ -104,23 +104,23 @@
         </tr>
         <tr class="my_column">
             <td class="title" width="50%" bgcolor="#dddddd" align="center">Рекламные материалы</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.lowering_criteria_dict['promotional materials'] }}</td>
+            <td class="ordinary"  style="color:{{text_color}}">{{ proposal.lowering_criteria_dict['promotional materials'] }}</td>
         </tr>
         <tr class="my_column">
             <td class="title" width="50%" bgcolor="#dddddd" align="center">Журналистские штампы</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.lowering_criteria_dict['journalistic stamps'] }}</td>
+            <td class="ordinary"  style="color:{{text_color}}">{{ proposal.lowering_criteria_dict['journalistic stamps'] }}</td>
         </tr>
         <tr class="my_column">
             <td class="title" width="50%" bgcolor="#dddddd" align="center">Заказной харатер</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.lowering_criteria_dict['сustom_nature'] }}</td>
+            <td class="ordinary"  style="color:{{text_color}}">{{ proposal.lowering_criteria_dict['сustom_nature'] }}</td>
         </tr>
         <tr class="my_column">
             <td class="title" width="50%" bgcolor="#dddddd" align="center">Грамматические ошибки</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.lowering_criteria_dict['grammatical_errors'] }}</td>
+            <td class="ordinary"  style="color:{{text_color}}">{{ proposal.lowering_criteria_dict['grammatical_errors'] }}</td>
         </tr>
         <tr class="my_column">
             <td class="title" width="50%" bgcolor="#dddddd" align="center">Орфоэпические лексические нормы</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.lowering_criteria_dict['orthoepic_norms'] }}</td>
+            <td class="ordinary"  style="color:{{text_color}}">{{ proposal.lowering_criteria_dict['orthoepic_norms'] }}</td>
         </tr>
     </table>
 </div>

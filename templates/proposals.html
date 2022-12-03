@@ -23,7 +23,6 @@
             <td class="title" width="5%" bgcolor="#dddddd" align="center">Тип работы</td>
             <td class="title" width="25%" bgcolor="#dddddd" align="center">Ссылка на работу</td>
             <td class="title" width="25%" bgcolor="#dddddd" align="center">Тема работы</td>
-            <td class="title" width="25%" bgcolor="#dddddd" align="center">Тема</td>
             <td class="title" width="6%" bgcolor="#dddddd" align="center">Статус</td>
             <td class="title" width="8%" bgcolor="#dddddd" align="center">Действие</td>
         </tr>
@@ -40,9 +39,6 @@
             <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ TYPES[proposal.type] }}</td>
             <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}"><a href="{{proposal.file}}">{{ proposal.file }}</a></td>
             <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.theme }}</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">
-                {{ proposal.type}}
-            </td>
             <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">{{ STATUSES[proposal.status] }}</td>
             <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">
                 {% if proposal.status == 'verified'%}
