@@ -13,13 +13,16 @@ class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)
     type = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    path = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    file = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     evaluation = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     lowering_criteria = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     status = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     likes = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
-    user_data = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
-
+    user_data = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    @property
+    def theme(self):
+        """Возвращает тему работы"""
+        return self.user_data_dict.get("theme")
     @property
     def evaluation_dict(self):
         """Возвращает словарь параметров оценивания"""
@@ -65,7 +68,7 @@ class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
         """
         self.id = id
         self.type = type
-        self.path = f"static/purposes/{id}"
+        self.file = file
         if type == 'text':
             self.evaluation = json.dumps(evaluation_table_text_default)
         else:

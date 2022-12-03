@@ -23,11 +23,11 @@ evaluation_table_video_default = {
     "operators_work": -1,
 }
 user_data_empty = {
-    "fullname": "",
-    "number": "",
-    "post": "",
-    "place of work": "",
-    "theme": "",
-    "title": "",
-    "annotation": "",
+    "fullname": "some name",
+    "number": "some number",
+    "post": "some post",
+    "place of work": "some place",
+    "theme": "some theme",
+    "title": "some title",
+    "annotation": "some annotation",
 }

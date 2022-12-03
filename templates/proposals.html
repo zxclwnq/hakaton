@@ -10,28 +10,29 @@
 
 {% block content %}
 <meta charset="UTF-8">
-{% set STATUSES  = {"received": "Принят", "serviced": "Выполняется", "finished":  "Завершен"} %}
+{% set STATUSES  = {"waiting_verification": "Ожидает оценивания", "verified": "Оценена", "aborted":  "Отменена"} %}
+{% set TYPES  = {"text": "Текстовая работа", "video": "Видео материал"} %}
 
 <br>
 {% if current_user.is_authenticated %}
     <a href="/add_call" class="btn btn-secondary">Новое сообщение</a>
 {% endif %}
 <br>
-<h2 align="center">Принятые заявки</h2>
+<h2 align="center">Оцененые заявки</h2>
 <br>
 <div class="table_container">
     <table class="my_table">
         <tr class="my_row">
-            <td class="title" width="2%" bgcolor="#dddddd" align="center">Номер</td>
-            <td class="title" width="5%" bgcolor="#dddddd" align="center">Время</td>
-            <td class="title" width="25%" bgcolor="#dddddd" align="center">Сообщение</td>
-            <td class="title" width="25%" bgcolor="#dddddd" align="center">Адрес</td>
+            <td class="title" width="2%" bgcolor="#dddddd" align="center">Id</td>
+            <td class="title" width="5%" bgcolor="#dddddd" align="center">Тип работы</td>
+            <td class="title" width="25%" bgcolor="#dddddd" align="center">Ссылка на работу</td>
+            <td class="title" width="25%" bgcolor="#dddddd" align="center">Тема работы</td>
             <td class="title" width="25%" bgcolor="#dddddd" align="center">Тема</td>
             <td class="title" width="6%" bgcolor="#dddddd" align="center">Статус</td>
             <td class="title" width="8%" bgcolor="#dddddd" align="center">Действия</td>
         </tr>
-        {% for call in calls %}
-            {% if (time_now - call.call_time).days >= 10 and call.status != "finished" %}
+        {% for proposal in proposals %}
+            {% if proposal.status != "verified" %}
                 {%  set color = "#dc143c" %}
                 {% set text_color = "#FFF0F5" %}
             {% else %}
@@ -39,21 +40,17 @@
                 {% set text_color = "ffffff" %}
             {% endif %}
         <tr class="my_row">
-            <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">{{ call.id }}</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ moment(call.call_time).format("DD.MM.YYYY HH:mm:ss") }}</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ call.message }}</td>
+            <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">{{ proposal.id }}</td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ TYPES[proposal.type] }}</td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}"><a>{{ proposal.file }}</a></td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.theme }}</td>
             <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">
-                <span class="ymaps-geolink">
-                        {{ call.address }}
-                </span>
+                {{ proposal.type}}
             </td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">
-                {{ call.service }}
-            </td>
-            <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">{{ STATUSES[call.status] }}</td>
+            <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">{{ STATUSES[proposal.status] }}</td>
             <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">
                 {% if current_user.is_authenticated %}
-                <div>       <a href="/calls/{{ call.id }}" class="btn btn-warning">.....</a>
+                <div>       <a href="/proposals/{{ proposal.id }}" class="btn btn-warning">.....</a>
                 </div>
                 {% endif %}
             </td>

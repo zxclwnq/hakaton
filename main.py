@@ -1,5 +1,7 @@
 import os
 import datetime
+import random
+
 from flask import Flask, render_template, redirect, request, abort, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from sqlalchemy import desc
@@ -7,7 +9,7 @@ from sqlalchemy import desc
 from data import db_session, call_resource
 from data.proposals import Proposal
 from data.users import User
-from forms.addcallform import AddCallForm
+from forms.addproposalform import AddProposalForm
 from forms.editcallform import EditCallForm
 
 from forms.loginform import LoginForm
@@ -67,7 +69,8 @@ def logout():  # exit
 @app.route('/')
 def index():  # main page
     db_sess = db_session.create_session()
-    calls = db_sess.query(Proposal).filter(Proposal.status != 'finished').all()
+    return redirect("/proposals") ## Временный редирект внизу ошибка !
+    proposals = db_sess.query(Proposal).filter(Proposal.status != 'verified').all()
     db_sess.commit()
     return render_template('main.html')
 
@@ -76,11 +79,15 @@ def index():  # main page
 @login_required
 def add_proposal():  # new proposal
     """Добавление заявки в БД"""
-    form = None  # Витина форма (Не работает)
+    form = AddProposalForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         new_proposal = Proposal()
-        db_sess.add(User)
+        proposal_id = random.randint(100, 10023) # создание рандомного id
+        # заполнение пустой заявки данными из формы
+        new_proposal.make_proposal(proposal_id ,form.type, form.file, form.user_data)
+        # добавление заявки в БД
+        db_sess.add(new_proposal)
         db_sess.commit()
         return redirect('/proposals')
     return render_template('add_proposal.html', title='Новый вызов',
@@ -133,9 +140,10 @@ def edit_proposal(call_id):  # edit existing proposal (i.e., edit grading)
 @login_required
 def proposals():
     db_sess = db_session.create_session()
-    calls = db_sess.query(Proposal).order_by(desc(Proposal.call_time)).all()  # call time нет !!!
+    proposals = db_sess.query(Proposal).all()
+    print(len(proposals))
     db_sess.commit()
-    return render_template('proposals.html', calls=calls, time_now=datetime.datetime.today())
+    return render_template('proposals.html', proposals=proposals)
 
 
 @app.route('/delete_proposal/<int:proposal_id>', methods=['GET', 'POST'])
@@ -152,14 +160,16 @@ def delete_proposal(proposal_id):
         abort(404)
     return redirect('/proposals')
 
+
+
 """Сейчас не заработает из-за ошибок в полях с адресом"""
 
 
 def main():  # run program
     db_session.global_init("main.db")
     port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
-    # app.run(port=port, debug=True)
+    #app.run(host='0.0.0.0', port=port)
+    app.run(port=port, debug=True)
 
 
 if __name__ == '__main__':
