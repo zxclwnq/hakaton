@@ -11,11 +11,10 @@ from data.proposals import Proposal
 from data.users import User
 from forms.addproposalform import AddProposalForm
 from forms.editcallform import EditCallForm
-
+from forms.textratingform import TextRatingForm
+from forms.videoratingform import VideoRatingForm
 from forms.loginform import LoginForm
-import hashlib
 
-hash_convertor = hashlib.md5()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'abcdef'
 app.config['JSON_AS_ASCII'] = False
@@ -84,18 +83,16 @@ def add_proposal():  # new proposal
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         new_proposal = Proposal()
-        hash_convertor.update(form.user_data["fullname"])
-        proposal_id = int(str(int(hash_convertor.hexdigest(), 16))[0:12])# создание рандомного id
+
+        proposal_id = random.randint(100,1000)# создание рандомного id
         # заполнение пустой заявки данными из формы
         new_proposal.make_proposal(proposal_id ,form.type.data, form.file.data, form.user_data)
 
         # добавление заявки в БД
         db_sess.add(new_proposal)
         db_sess.commit()
-
-        return redirect('/proposals')
-    return render_template('add_proposal.html', title='Новый вызов',
-                           form=form)
+        return redirect("/proposals")
+    return render_template('add_proposal.html',form=form)
 
 
 
@@ -103,10 +100,20 @@ def add_proposal():  # new proposal
 @app.route('/proposals/rate/<int:proposal_id>', methods=['GET', 'POST'])
 @login_required
 def eval_proposal(proposal_id): # Оценивание заявок экспертами
-    pass
-    #proposal = get_proposal(proposal_id)
-    #proposal.verify_proposal()
-    #return render_template('view_proposal.html',proposal=proposal)
+    db_sess = db_session.create_session()
+    current_proposal = db_sess.query(Proposal).filter(Proposal.id == proposal_id).first()
+    if current_proposal.type == "text":
+        form = TextRatingForm()
+    else:
+        form = VideoRatingForm()
+
+    if form.validate_on_submit():
+        ratings = form.get_text_rating if current_proposal.type == 'text' else form.get_video_rating
+        lowering_ratings = form.get_lowering_rating
+        current_proposal.verify_proposal(ratings,lowering_ratings,'verified')
+        db_sess.commit()
+        return redirect("/proposals")
+    return render_template("evaluate_proposal.html",type=current_proposal.type,form=form)
 
 @app.route('/proposals/view/<int:proposal_id>', methods=['GET', 'POST'])
 def view_proposal(proposal_id):
@@ -118,7 +125,7 @@ def view_proposal(proposal_id):
 @app.route('/proposals')
 def proposals():
     db_sess = db_session.create_session()
-    proposals = db_sess.query(Proposal).filter(Proposal.status == 'verified').all()
+    proposals = db_sess.query(Proposal).all()#.filter(Proposal.status == 'verified').all()
     db_sess.commit()
     return render_template('proposals.html', proposals=proposals)
 
