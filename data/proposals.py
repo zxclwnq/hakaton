@@ -38,6 +38,14 @@ class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
         """Возвращает словарь параметров понижения оценки"""
         return json.loads(self.lowering_criteria)
 
+    @property
+    def average_score(self):
+        """Возвращает среднюю оценку заявки
+        (Средняя оценка по критериям минус средняя оценка по понижающим критериям)
+        """
+        return round(sum(self.evaluation_dict.values())/len(self.evaluation_dict.values()) -\
+            sum(self.lowering_criteria_dict.values()) / len(self.lowering_criteria_dict.values()),2)
+
     def verify_proposal(
             self,
             new_evaluation: dict,

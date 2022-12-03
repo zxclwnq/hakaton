@@ -13,7 +13,9 @@ from forms.addproposalform import AddProposalForm
 from forms.editcallform import EditCallForm
 
 from forms.loginform import LoginForm
+import hashlib
 
+hash_convertor = hashlib.md5()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'abcdef'
 app.config['JSON_AS_ASCII'] = False
@@ -70,23 +72,20 @@ def logout():  # exit
 
 
 @app.route('/')
-def index():  # main page
-    db_sess = db_session.create_session()
-    return redirect("/proposals") ## Временный редирект внизу ошибка !
-    proposals = db_sess.query(Proposal).filter(Proposal.status != 'verified').all()
-    db_sess.commit()
+def index():
+    """Запуск основой страцицы"""
     return render_template('main.html')
 
 
 @app.route('/add_proposal', methods=['GET', 'POST'])
-@login_required
 def add_proposal():  # new proposal
     """Добавление заявки в БД"""
     form = AddProposalForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         new_proposal = Proposal()
-        proposal_id = random.randint(100, 10023) # создание рандомного id
+        hash_convertor.update(form.user_data["fullname"])
+        proposal_id = int(str(int(hash_convertor.hexdigest(), 16))[0:12])# создание рандомного id
         # заполнение пустой заявки данными из формы
         new_proposal.make_proposal(proposal_id ,form.type.data, form.file.data, form.user_data)
 
@@ -97,62 +96,29 @@ def add_proposal():  # new proposal
         return redirect('/proposals')
     return render_template('add_proposal.html', title='Новый вызов',
                            form=form)
-@app.route('/proposals/elval/<int:proposal_id>', methods=['GET', 'POST'])
-def view_proposal(proposal_id):
-    proposal = get_proposal(proposal_id)
-    proposal.verify_proposal()
-    return render_template('view_proposal.html',proposal=proposal)
+
+
+
+""" Оценка заявок экспертами """
+@app.route('/proposals/rate/<int:proposal_id>', methods=['GET', 'POST'])
+@login_required
+def eval_proposal(proposal_id): # Оценивание заявок экспертами
+    pass
+    #proposal = get_proposal(proposal_id)
+    #proposal.verify_proposal()
+    #return render_template('view_proposal.html',proposal=proposal)
 
 @app.route('/proposals/view/<int:proposal_id>', methods=['GET', 'POST'])
 def view_proposal(proposal_id):
     proposal = get_proposal(proposal_id)
     return render_template('view_proposal.html',proposal=proposal)
-"""ПОЛНОСТЬЮ Переделать"""
 
-
-@app.route('/proposals/<int:call_id>', methods=['GET', 'POST'])
-@login_required
-def edit_proposal(call_id):  # edit existing proposal (i.e., edit grading)
-    form = EditCallForm()
-    if request.method == "GET":
-        db_sess = db_session.create_session()
-        proposal = db_sess.query(Proposal).filter(Proposal.id == call_id).first()
-        if proposal:
-            form.message.data = proposal.message
-            form.address.data = proposal.address
-            form.service.data = proposal.service
-            form.status.data = proposal.status
-            form.answer.data = proposal.answer
-            form.call_id.data = proposal.id
-            form.call_time.data = proposal.call_time
-            form.finish_time.data = proposal.finish_time
-            if proposal.point:
-                x, y = proposal.point.split()
-                form.point.data = f"{x},{y}"
-        else:
-            abort(404)
-    if form.validate_on_submit():
-        db_sess = db_session.create_session()
-        proposal = db_sess.query(Proposal).filter(Proposal.id == call_id).first()
-        if proposal:
-            proposal.message = form.message.data
-            proposal.service = form.service.data
-            proposal.answer = form.answer.data
-            proposal.change_address(form.address.data)
-            proposal.change_status(form.status.data)
-            db_sess.commit()
-            return redirect('/calls')
-        else:
-            abort(404)
-    return render_template('edit_proposal.html',
-                           title='Редактирование вызова',
-                           form=form)
 
 
 @app.route('/proposals')
 def proposals():
     db_sess = db_session.create_session()
-    proposals = db_sess.query(Proposal).all()
+    proposals = db_sess.query(Proposal).filter(Proposal.status == 'verified').all()
     db_sess.commit()
     return render_template('proposals.html', proposals=proposals)
 
@@ -171,9 +137,6 @@ def delete_proposal(proposal_id):
         abort(404)
     return redirect('/proposals')
 
-
-
-"""Сейчас не заработает из-за ошибок в полях с адресом"""
 
 
 def main():  # run program

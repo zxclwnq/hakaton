@@ -9,6 +9,11 @@
 
 {% block content %}
 <meta charset="UTF-8">
+<style>
+.ordinary {
+    bgcolor: #d0daed;
+}
+</style>
 {% set STATUSES  = {"waiting_verification": "Требует оценки", "verified": "Оценена", "aborted":  "Отклонена"} %}
 
 <br>
@@ -28,35 +33,35 @@
         </tr>
         <tr class="my_column">
             <td class="title" width="50%" bgcolor="#dddddd" align="center">Актуальность</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.evaluation_dict['relevance'] }}</td>
+            <td class="ordinary" style="color:{{text_color}}">{{ proposal.evaluation_dict['relevance'] }}</td>
         </tr>
         <tr class="my_column">
             <td class="title" width="50%" bgcolor="#dddddd" align="center">Цельность</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.evaluation_dict['integrity'] }}</td>
+            <td class="ordinary" style="color:{{text_color}}">{{ proposal.evaluation_dict['integrity'] }}</td>
         </tr>
         <tr class="my_column">
             <td class="title" width="50%" bgcolor="#dddddd" align="center">Аргументированность</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.evaluation_dict['validity'] }}</td>
+            <td class="ordinary" style="color:{{text_color}}">{{ proposal.evaluation_dict['validity'] }}</td>
         </tr>
         <tr class="my_column">
             <td class="title" width="50%" bgcolor="#dddddd" align="center">Резонансность</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.evaluation_dict['resonance'] }}</td>
+            <td class="ordinary" style="color:{{text_color}}">{{ proposal.evaluation_dict['resonance'] }}</td>
         </tr>
         <tr class="my_column">
             <td class="title" width="50%" bgcolor="#dddddd" align="center">Точность и доходчивость</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.evaluation_dict['accuracy'] }}</td>
+            <td class="ordinary" style="color:{{text_color}}">{{ proposal.evaluation_dict['accuracy'] }}</td>
         </tr>
         <tr class="my_column">
             <td class="title" width="50%" bgcolor="#dddddd" align="center">Профессионально-этический подход</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.evaluation_dict['ethnicity'] }}</td>
+            <td class="ordinary" style="color:{{text_color}}">{{ proposal.evaluation_dict['ethnicity'] }}</td>
         </tr>
         <tr class="my_column">
             <td class="title" width="50%" bgcolor="#dddddd" align="center">Доступность</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.evaluation_dict['availability'] }}</td>
+            <td class="ordinary"  style="color:{{text_color}}">{{ proposal.evaluation_dict['availability'] }}</td>
         </tr>
         <tr class="my_column">
             <td class="title" width="50%" bgcolor="#dddddd" align="center">Цикл материалов</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.evaluation_dict['materials cycle'] }}</td>
+            <td class="ordinary" style="color:{{text_color}}">{{ proposal.evaluation_dict['materials cycle'] }}</td>
         </tr>
     </table>
 {% else %}
@@ -119,5 +124,9 @@
         </tr>
     </table>
 </div>
-
+<div>
+    <h2>
+        Средняя оценка: {{proposal.average_score}}
+    </h2>
+</div>
 {% endblock %}
