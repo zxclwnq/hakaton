@@ -17,22 +17,16 @@
           <img src="/static/favicon.svg" height = "70px">
           <h1>Творческий конкурс журналистов </h1>
           <a class="nav-brand" href="/proposals"> Оцененые заявки</a>
-          {% if current_user.is_authenticated %}
+
           <div class="nav-item dropdown">
-          <a class="nav-brand dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Сообщения </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="/calls">Список сообщений</a>
-                    <a class="dropdown-item" href="/add_call">Новое сообщение</a>
+                    <a class="dropdown-item" href="/proposals">Заявки</a>
+                    <a class="dropdown-item" href="/add_proposal">Новая заявка</a>
                 </div>
           </div>
+          {% if current_user.is_authenticated %}
           <a class="navbar-link" href="/users/{{current_user.id}}">{{current_user.name}} {{current_user.surname}}</a>
           <a class="navbar-link" href="/logout">Выход</a>
-          {% else %}
-            <p>
-                <a class="btn btn-success" href="/login">Войти</a>
-                <a class="btn btn-primary " href="/register">Зарегистрироваться</a>
-            </p>
           {% endif %}
       </nav>
     </header>

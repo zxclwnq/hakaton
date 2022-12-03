@@ -88,7 +88,8 @@ def add_proposal():  # new proposal
         new_proposal = Proposal()
         proposal_id = random.randint(100, 10023) # создание рандомного id
         # заполнение пустой заявки данными из формы
-        new_proposal.make_proposal(proposal_id ,form.type, form.file, form.user_data)
+        new_proposal.make_proposal(proposal_id ,form.type.data, form.file.data, form.user_data)
+
         # добавление заявки в БД
         db_sess.add(new_proposal)
         db_sess.commit()
@@ -96,6 +97,11 @@ def add_proposal():  # new proposal
         return redirect('/proposals')
     return render_template('add_proposal.html', title='Новый вызов',
                            form=form)
+@app.route('/proposals/elval/<int:proposal_id>', methods=['GET', 'POST'])
+def view_proposal(proposal_id):
+    proposal = get_proposal(proposal_id)
+    proposal.verify_proposal()
+    return render_template('view_proposal.html',proposal=proposal)
 
 @app.route('/proposals/view/<int:proposal_id>', methods=['GET', 'POST'])
 def view_proposal(proposal_id):
@@ -147,7 +153,6 @@ def edit_proposal(call_id):  # edit existing proposal (i.e., edit grading)
 def proposals():
     db_sess = db_session.create_session()
     proposals = db_sess.query(Proposal).all()
-    print(len(proposals))
     db_sess.commit()
     return render_template('proposals.html', proposals=proposals)
 

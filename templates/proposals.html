@@ -13,9 +13,6 @@
 {% set TYPES  = {"text": "Текстовая работа", "video": "Видео материал"} %}
 
 <br>
-{% if current_user.is_authenticated %}
-    <a href="/add_call" class="btn btn-secondary">Новое сообщение</a>
-{% endif %}
 <br>
 <h2 align="center">Оцененые заявки</h2>
 <br>
@@ -28,7 +25,7 @@
             <td class="title" width="25%" bgcolor="#dddddd" align="center">Тема работы</td>
             <td class="title" width="25%" bgcolor="#dddddd" align="center">Тема</td>
             <td class="title" width="6%" bgcolor="#dddddd" align="center">Статус</td>
-            <td class="title" width="8%" bgcolor="#dddddd" align="center">Посмотреть результат заявки</td>
+            <td class="title" width="8%" bgcolor="#dddddd" align="center">Действие</td>
         </tr>
         {% for proposal in proposals %}
             {% if proposal.status != "verified" %}

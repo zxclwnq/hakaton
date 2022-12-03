@@ -15,18 +15,20 @@ class AddProposalForm(FlaskForm):
     title = StringField('Введите заголовок работы', validators=[DataRequired(message="Поле 'адрес' не может быть пустым")])
     annotation = StringField('Введите аннотацию по конкурсной работе', validators=[DataRequired(message="Поле 'адрес' не может быть пустым")])
 
-
     #Передаю в базу
     type = RadioField('Выберите тип заявки', choices=[('text','Печатное издание'),('video','Видеоматериал')])
-    file = StringField('Введите ссылку на файл в облачном хранилище', validators=[DataRequired(message="Поле 'адрес' не может быть пустым")])
-    user_data = {
-        "fullname": fullname,
-        "number": number,
-        "post": post,
-        "place of work": place_of_work,
-        "theme": theme,
-        "title": title,
-        "annotation": annotation,
-    }
+    file = StringField('Введите ссылку на файл в облачном хранилище', validators=[DataRequired(message="Поле 'адрес' "
+                                                                                                       "не может быть пустым")])
+    @property
+    def user_data(self):
+        return {
+            "fullname": str(self.fullname.data),
+            "number": str(self.number.data),
+            "post": str(self.post.data),
+            "place of work": str(self.place_of_work.data),
+            "theme": str(self.theme.data),
+            "title": str(self.title.data),
+            "annotation": str(self.annotation.data)
+        }
 
     submit = SubmitField('Отправить заявку')
