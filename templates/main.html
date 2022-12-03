@@ -6,7 +6,47 @@
 {% endblock %}
 
 {% block content %}
-
+{% set STAGES = {1:"Ожидается запуск",2:"Прием заявок",3:"Независимая экспертиза",4:"Завершение конкурса"}%}
+{% if current_user.position == 'admin' %}
+    <h1>Панель управления</h1>
+    <table class="my_table">
+        <tr class="my_row">
+            <td class="title" width="2%" bgcolor="#dddddd" align="center">Текущая стадия конкурса</td>
+            <td class="title" width="5%" bgcolor="#dddddd" align="center">Общее количество заявок заявок</td>
+            <td class="title" width="25%" bgcolor="#dddddd" align="center">Количество заявок которые прошли проверку</td>
+        </tr>
+        {% for proposal in proposals %}
+            {% if proposal.status != "verified" %}
+                {%  set color = "#dc143c" %}
+                {% set text_color = "#FFF0F5" %}
+            {% else %}
+                {% set color = "#d0daed"  %}
+                {% set text_color = "ffffff" %}
+            {% endif %}
+        <tr class="my_row">
+            <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">{{ STAGE[stage.stage] }}</td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ len(total_proposals) }}</td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}"><a href="{{proposal.file}}">{{  }}</a></td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.theme }}</td>
+            <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">{{ STATUSES[proposal.status] }}</td>
+            <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">
+                {% if proposal.status == 'verified'%}
+                <div>    {{proposal.average_score}}
+                </div>
+                {% endif %}
+            </td>
+            <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">
+                {% if proposal.status == 'verified'%}
+                <div>       <a href="/proposals/view/{{ proposal.id }}" class="btn btn-warning">Посмотреть результаты</a>
+                </div>
+                {% elif current_user.is_authenticated %}
+                <div>       <a href="/proposals/rate/{{ proposal.id }}" class="btn btn-warning">Оценить работу</a>
+                </div>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+{% endif%}
 {% endblock %}
 
 

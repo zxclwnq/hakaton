@@ -1,12 +1,12 @@
 import os
-import datetime
+from datetime import datetime
 import random
-
+from multiprocessing import Process
 from flask import Flask, render_template, redirect, request, abort, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from sqlalchemy import desc
-
-from data import db_session, call_resource
+from classes.stage import Stage
+from data import db_session
 from data.proposals import Proposal
 from data.users import User
 from forms.addproposalform import AddProposalForm
@@ -20,13 +20,15 @@ app.config['SECRET_KEY'] = 'abcdef'
 app.config['JSON_AS_ASCII'] = False
 login_manager = LoginManager()
 login_manager.init_app(app)
+competition_stage = Stage()
+
+
 
 
 @login_manager.user_loader
 def load_user(user_id):  # find user in database
     db_sess = db_session.create_session()
     return db_sess.query(User).get(user_id)
-
 
 
 
@@ -102,10 +104,8 @@ def add_proposal():  # new proposal
 def eval_proposal(proposal_id): # Оценивание заявок экспертами
     db_sess = db_session.create_session()
     current_proposal = db_sess.query(Proposal).filter(Proposal.id == proposal_id).first()
-    if current_proposal.type == "text":
-        form = TextRatingForm()
-    else:
-        form = VideoRatingForm()
+    form = TextRatingForm() if current_proposal.type == "text" else VideoRatingForm()
+
 
     if form.validate_on_submit():
         ratings = form.get_text_rating if current_proposal.type == 'text' else form.get_video_rating

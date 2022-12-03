@@ -43,8 +43,8 @@ class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
         """Возвращает среднюю оценку заявки
         (Средняя оценка по критериям минус средняя оценка по понижающим критериям)
         """
-        return round(sum(self.evaluation_dict.values())/len(self.evaluation_dict.values()) -\
-            sum(self.lowering_criteria_dict.values()) / len(self.lowering_criteria_dict.values()),2)
+        return round(sum(self.evaluation_dict.values()) -\
+            sum(self.lowering_criteria_dict.values()),2)
 
     def verify_proposal(
             self,
