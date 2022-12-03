@@ -152,7 +152,7 @@ def delete_proposal(call_id):  # delete proposal (e.g. copy of someone's work)
 """Сейчас не заработает из-за ошибок в полях с адресом"""
 
 def main():  # run program
-    db_session.global_init("emergency.db")
+    db_session.global_init("main.db")
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
     # app.run(port=port, debug=True)
