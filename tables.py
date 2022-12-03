@@ -25,6 +25,8 @@ evaluation_table_video_default = {
 user_data_empty = {
     "fullname": "",
     "number": "",
+    "post": "",
+    "place of work": "",
     "theme": "",
     "title": "",
     "annotation": "",

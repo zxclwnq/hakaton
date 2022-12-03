@@ -26,7 +26,11 @@ def load_user(user_id):  # find user in database
     return db_sess.query(User).get(user_id)
 
 # add proposal
-# dele
+# delete proposal
+def add_proposal(proposal:Proposal):
+    """Добавление заявки в БД"""
+    db_sess = db_session.create_session()
+    return db_sess.add(User)
 
 @app.errorhandler(404)
 def not_found(error):  # Error 404
