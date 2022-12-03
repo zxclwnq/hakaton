@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired
 class EditCallForm(FlaskForm):
     message = TextAreaField('Сообщение', validators=[DataRequired(message="Поле 'сообщение' не может быть пустым")])
     address = StringField('Адрес', validators=[DataRequired(message="Поле 'адрес' не может быть пустым"),
-                                                            AddressRequired(unique=True)]) #тут адрес был
+                                                            ]) #тут адрес был
     status = RadioField('Статус',
                         choices=[('received', 'Принят'), ('serviced', 'Выполняется'), ('finished', 'Завершен')])
     answer = StringField('Ответ')

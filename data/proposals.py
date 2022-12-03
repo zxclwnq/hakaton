@@ -7,7 +7,7 @@ from .db_session import SqlAlchemyBase
 from tables import evaluation_table_video_default, evaluation_table_text_default, lowering_criteria_default
 
 
-class Purpose(SqlAlchemyBase, UserMixin, SerializerMixin):
+class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'purposes'
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
