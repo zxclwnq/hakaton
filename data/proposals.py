@@ -9,6 +9,7 @@ from tables import evaluation_table_video_default, evaluation_table_text_default
 
 class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'proposal'
+    max_rates = 3
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)
@@ -19,6 +20,7 @@ class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
     status = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     likes = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     user_data = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    experts_rates = sqlalchemy.Column(sqlalchemy.String, nullable=True)
 
     @property
     def annotation(self):
@@ -39,9 +41,16 @@ class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
         return json.loads(self.user_data)
 
     @property
+    def experts_list(self):
+        """Возвращает список id экспертов проверявших эту работу"""
+        return json.loads(self.experts_rates)
+    @property
     def lowering_criteria_dict(self):
         """Возвращает словарь параметров понижения оценки"""
         return json.loads(self.lowering_criteria)
+
+    def can_be_rated(self, expert_id):
+        return self.status == "waiting_verification" and expert_id not in self.experts_list['expert_ids']
 
     @property
     def average_score(self):
@@ -68,7 +77,7 @@ class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
             self,
             new_evaluation: dict,
             new_lowering_criteria: dict,
-            new_status: str):
+            expert_id: int):
         """
         Закрывает оценивание заявки
         :param new_evaluation: новые оценки заявки
@@ -79,8 +88,19 @@ class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
         """
         self.change_evaluation(new_evaluation)
         self.change_lowering_criteria(new_lowering_criteria)
-        self.change_status(new_status)
+        self.add_expert(expert_id)
 
+    def add_expert(self, expert_id):
+        """
+        Изменяет добавляет id эксперта в список
+        :param expert_id: id эксперта
+        """
+
+        experts_list = self.experts_list["expert_ids"]
+        experts_list.append(expert_id)
+        if len(experts_list) == self.max_rates:
+            self.change_status('verified')
+        self.experts_rates = json.dumps({"expert_ids" :experts_list})
     def make_proposal(
             self,
             id: int,
@@ -105,6 +125,7 @@ class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
         self.status = "waiting_verification"
         self.likes = 0
         self.user_data = json.dumps(user_data)
+        self.experts_rates = json.dumps({"expert_ids": []})
 
     def change_evaluation(self, new_evaluation: dict):
         """

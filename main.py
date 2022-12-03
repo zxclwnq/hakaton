@@ -128,9 +128,9 @@ def eval_proposal(proposal_id): # Оценивание заявок экспер
         lowering_ratings = form.get_lowering_rating
         ratings["expert"] = f"{current_user.surname} {current_user.name}"
         lowering_ratings["expert"] = f"{current_user.surname} {current_user.name}"
-        current_proposal.verify_proposal(ratings,lowering_ratings,'verified')
+        current_proposal.verify_proposal(ratings,lowering_ratings,current_user.id)
         db_sess.commit()
-        return redirect("/proposals")
+        return redirect("/")
     return render_template("evaluate_proposal.html",proposal=current_proposal,form=form)
 
 @app.route('/proposals/view/<int:proposal_id>', methods=['GET', 'POST'])

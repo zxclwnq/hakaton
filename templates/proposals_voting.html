@@ -40,9 +40,14 @@
             <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.theme }}</td>
             <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.annotation }}</td>
             <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">{{ proposal.likes }}</td>
-            {% if current_user.access_level >= 2 %}
+            {% if current_user.access_level >= 2  and proposal.can_be_rated(current_user.id)%}
                 <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">
                         <div>       <a href="/proposals/rate/{{ proposal.id }}" class="btn btn-warning" >Оценить заявку</a>
+                    </div>
+                </td>
+            {%else %}
+                <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">
+                        <div>       <a href="/proposals/view/{{ proposal.id }}" class="btn btn-warning" >Посмотреть заявку</a>
                     </div>
                 </td>
             {% endif %}
