@@ -25,6 +25,8 @@ def load_user(user_id):  # find user in database
     db_sess = db_session.create_session()
     return db_sess.query(User).get(user_id)
 
+# add proposal
+# dele
 
 @app.errorhandler(404)
 def not_found(error):  # Error 404
@@ -73,14 +75,14 @@ def index():  # main page
 @app.route('/add_proposal', methods=['GET', 'POST'])
 @login_required
 def add_proposal():  # new proposal
-    form = AddCallForm()
+    form = None  # Витина форма (Не работает)
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        call = Proposal()
-        call.message = form.message.data
-        call.address = form.address.data
-        call.recognize_call()
-        db_sess.add(call)
+        proposal = Proposal()
+        proposal.message = form.message.data
+        proposal.address = form.address.data
+        proposal.recognize_call()
+        db_sess.add(proposal)
         db_sess.commit()
         return redirect('/proposals')
     return render_template('add_proposal.html', title='Новый вызов',

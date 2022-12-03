@@ -12,7 +12,7 @@ lowering_criteria_default = {
     "promotional materials": 0,
     "journalistic stamps": 0,
     "сustom_nature": 0,
-    "grammatical_errors":0,
+    "grammatical_errors": 0,
     "orthoepic_norms": 0
 }
 evaluation_table_video_default = {
@@ -21,4 +21,11 @@ evaluation_table_video_default = {
     "personalized_character": -1,
     "artistic_techniques": -1,
     "operators_work": -1,
+}
+user_data_empty = {
+    "fullname": "",
+    "number": "",
+    "theme": "",
+    "title": "",
+    "annotation": "",
 }

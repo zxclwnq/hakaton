@@ -18,11 +18,17 @@ class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
     lowering_criteria = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     status = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     likes = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
+    user_data = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
 
     @property
     def evaluation_dict(self):
         """Возвращает словарь параметров оценивания"""
         return json.loads(self.evaluation)
+
+    @property
+    def user_data_dict(self):
+        """Возвращает личные данные пользователя"""
+        return json.loads(self.user_data)
 
     @property
     def lowering_criteria_dict(self):
@@ -48,12 +54,14 @@ class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
             self,
             id: int,
             type: str,
-            file: str):
+            file: str,
+            user_data: dict):
         """
         Заполняет новую заявку дефолтными значениями
         :param id Id заявки
         :param type тип заявки (text or video)
         :param file прикрепленный файл заявки
+        :param user_data личные данные пользователя
         """
         self.id = id
         self.type = type
@@ -65,6 +73,7 @@ class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
         self.lowering_criteria = json.dumps(lowering_criteria_default)
         self.status = "waiting_verification"
         self.likes = 0
+        self.user_data = json.dumps(user_data)
 
     def change_evaluation(self, new_evaluation: dict):
         """
