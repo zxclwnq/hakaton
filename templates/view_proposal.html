@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block head %}
+<meta charset="UTF-8">
+{% endblock %}
+
+
+
+
+{% block content %}
+<meta charset="UTF-8">
+{% set STATUSES  = {"waiting_verification": "Требует оценки", "verified": "Оценена", "aborted":  "Отклонена"} %}
+
+<br>
+{% if current_user.is_authenticated %}
+    <a href="/add_call" class="btn btn-secondary">Новое сообщение</a>
+{% endif %}
+<br>
+<h2 align="center">Принятые заявки</h2>
+<br>
+{% if type.text %}
+<div class="table_container">
+    <table class="my_table">
+        <tr class="my_column">
+            <th class="title" width="50%" bgcolor="#dddddd" align="center">Параметры оценивания</th>
+            <th class="title" width="50%" bgcolor="#dddddd" align="center">Оценка</th>
+        </tr>
+        <tr class="my_column">
+            <td class="title" width="50%" bgcolor="#dddddd" align="center">Актуальность</td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{% rating %}</td>
+        </tr>
+        <tr class="my_column">
+            <td class="title" width="50%" bgcolor="#dddddd" align="center">Цельность</td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{% rating %}</td>
+        </tr>
+        <tr class="my_column">
+            <td class="title" width="50%" bgcolor="#dddddd" align="center">Аргументированность</td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{% rating %}</td>
+        </tr>
+        <tr class="my_column">
+            <td class="title" width="50%" bgcolor="#dddddd" align="center">Резонансность</td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{% rating %}</td>
+        </tr>
+        <tr class="my_column">
+            <td class="title" width="50%" bgcolor="#dddddd" align="center">Точность и доходчивость</td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{% rating %}</td>
+        </tr>
+        <tr class="my_column">
+            <td class="title" width="50%" bgcolor="#dddddd" align="center">Профессионально-этический подход</td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{% rating %}</td>
+        </tr>
+        <tr class="my_column">
+            <td class="title" width="50%" bgcolor="#dddddd" align="center">Доступность</td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{% rating %}</td>
+        </tr>
+        <tr class="my_column">
+            <td class="title" width="50%" bgcolor="#dddddd" align="center">Цикл материалов</td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{% rating %}</td>
+        </tr>
+    </table>
+{% else %}
+</div>
+<div class="table_container">
+    <table class="my_table">
+        <tr class="my_column">
+            <th class="title" width="50%" bgcolor="#dddddd" align="center">Параметры оценивания</th>
+            <th class="title" width="50%" bgcolor="#dddddd" align="center">Оценка</th>
+        </tr>
+        <tr class="my_column">
+            <td class="title" width="50%" bgcolor="#dddddd" align="center">Выражение мысли</td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{% rating %}</td>
+        </tr>
+        <tr class="my_column">
+            <td class="title" width="50%" bgcolor="#dddddd" align="center">Единство передачи</td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{% rating %}</td>
+        </tr>
+        <tr class="my_column">
+            <td class="title" width="50%" bgcolor="#dddddd" align="center">Персонифицированный подход</td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{% rating %}</td>
+        </tr>
+        <tr class="my_column">
+            <td class="title" width="50%" bgcolor="#dddddd" align="center">Художественные приемы</td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{% rating %}</td>
+        </tr>
+        <tr class="my_column">
+            <td class="title" width="50%" bgcolor="#dddddd" align="center">Работа оператора</td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{% rating %}</td>
+        </tr>
+    </table>
+</div>
+{% endif %}
+
+<div class="table_container">
+    <table class="my_table">
+        <tr class="my_column">
+            <th class="title" width="50%" bgcolor="#dddddd" align="center">Параметры понижения</th>
+            <th class="title" width="50%" bgcolor="#dddddd" align="center">Оценка</th>
+        </tr>
+        <tr class="my_column">
+            <td class="title" width="50%" bgcolor="#dddddd" align="center">Рекламные материалы</td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{% rating %}</td>
+        </tr>
+        <tr class="my_column">
+            <td class="title" width="50%" bgcolor="#dddddd" align="center">Журналистские штампы</td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{% rating %}</td>
+        </tr>
+        <tr class="my_column">
+            <td class="title" width="50%" bgcolor="#dddddd" align="center">Заказной харатер</td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{% rating %}</td>
+        </tr>
+        <tr class="my_column">
+            <td class="title" width="50%" bgcolor="#dddddd" align="center">Грамматические ошибки</td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{% rating %}</td>
+        </tr>
+        <tr class="my_column">
+            <td class="title" width="50%" bgcolor="#dddddd" align="center">Орфоэпические лексические нормы</td>
+            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{% rating %}</td>
+        </tr>
+    </table>
+</div>
+
+{% endblock %}
