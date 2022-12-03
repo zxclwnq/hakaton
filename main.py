@@ -25,8 +25,7 @@ def load_user(user_id):  # find user in database
     return db_sess.query(User).get(user_id)
 
 
-# add proposal
-# delete proposal
+
 
 
 
@@ -75,11 +74,8 @@ def index():  # main page
 
 @app.route('/add_proposal', methods=['GET', 'POST'])
 @login_required
-def add_proposal(proposal: Proposal):
-    """Добавление заявки в БД"""
-    db_sess = db_session.create_session()
-    return 
 def add_proposal():  # new proposal
+    """Добавление заявки в БД"""
     form = None  # Витина форма (Не работает)
     if form.validate_on_submit():
         db_sess = db_session.create_session()
