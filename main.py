@@ -31,8 +31,11 @@ def load_user(user_id):  # find user in database
 
 
 
-
-
+def get_proposal(proposal_id):
+    db_sess = db_session.create_session()
+    curr_proposal = db_sess.query(Proposal).filter(Proposal.id == proposal_id).first()
+    #db_sess.expunge_all()
+    return curr_proposal
 
 @app.errorhandler(404)
 def not_found(error):  # Error 404
@@ -89,11 +92,15 @@ def add_proposal():  # new proposal
         # добавление заявки в БД
         db_sess.add(new_proposal)
         db_sess.commit()
+
         return redirect('/proposals')
     return render_template('add_proposal.html', title='Новый вызов',
                            form=form)
 
-
+@app.route('/proposals/view/<int:proposal_id>', methods=['GET', 'POST'])
+def view_proposal(proposal_id):
+    proposal = get_proposal(proposal_id)
+    return render_template('view_proposal.html',proposal=proposal)
 """ПОЛНОСТЬЮ Переделать"""
 
 
@@ -137,7 +144,6 @@ def edit_proposal(call_id):  # edit existing proposal (i.e., edit grading)
 
 
 @app.route('/proposals')
-@login_required
 def proposals():
     db_sess = db_session.create_session()
     proposals = db_sess.query(Proposal).all()

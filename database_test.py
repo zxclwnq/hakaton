@@ -4,7 +4,7 @@ from data.proposals import Proposal
 from data import db_session
 from tables import user_data_empty,evaluation_table_text_default,lowering_criteria_default
 
-propose_id = 1
+propose_id = 4
 def add(db_ses):
     new_proposal = Proposal()
     new_proposal.make_proposal(propose_id, "text", "https://it.orb.ru/hackathon",
@@ -22,7 +22,7 @@ def main():
     db_session.global_init("main.db")
     db_ses = db_session.create_session()
     add(db_ses)
-    #approve(db_ses)
+    approve(db_ses)
 
 
 if __name__ == '__main__':
