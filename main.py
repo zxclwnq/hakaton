@@ -12,7 +12,6 @@ from forms.editcallform import EditCallForm
 
 from forms.loginform import LoginForm
 
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'abcdef'
 app.config['JSON_AS_ASCII'] = False
@@ -25,12 +24,14 @@ def load_user(user_id):  # find user in database
     db_sess = db_session.create_session()
     return db_sess.query(User).get(user_id)
 
+
 # add proposal
 # delete proposal
-def add_proposal(proposal:Proposal):
-    """Добавление заявки в БД"""
-    db_sess = db_session.create_session()
-    return db_sess.add(User)
+
+
+
+
+
 
 @app.errorhandler(404)
 def not_found(error):  # Error 404
@@ -40,10 +41,6 @@ def not_found(error):  # Error 404
 @app.errorhandler(401)
 def unauthorized_access(error):  # Access error
     return redirect('/login')
-
-
-
-
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -78,21 +75,25 @@ def index():  # main page
 
 @app.route('/add_proposal', methods=['GET', 'POST'])
 @login_required
+def add_proposal(proposal: Proposal):
+    """Добавление заявки в БД"""
+    db_sess = db_session.create_session()
+    return 
 def add_proposal():  # new proposal
     form = None  # Витина форма (Не работает)
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        proposal = Proposal()
-        proposal.message = form.message.data
-        proposal.address = form.address.data
-        proposal.recognize_call()
-        db_sess.add(proposal)
+        new_proposal = Proposal()
+        db_sess.add(User)
         db_sess.commit()
         return redirect('/proposals')
     return render_template('add_proposal.html', title='Новый вызов',
                            form=form)
 
+
 """ПОЛНОСТЬЮ Переделать"""
+
+
 @app.route('/proposals/<int:call_id>', methods=['GET', 'POST'])
 @login_required
 def edit_proposal(call_id):  # edit existing proposal (i.e., edit grading)
@@ -136,32 +137,34 @@ def edit_proposal(call_id):  # edit existing proposal (i.e., edit grading)
 @login_required
 def proposals():
     db_sess = db_session.create_session()
-    calls = db_sess.query(Proposal).order_by(desc(Proposal.call_time)).all() # call time нет !!!
+    calls = db_sess.query(Proposal).order_by(desc(Proposal.call_time)).all()  # call time нет !!!
     db_sess.commit()
     return render_template('proposals.html', calls=calls, time_now=datetime.datetime.today())
 
 
-@app.route('/delete_proposal/<int:call_id>', methods=['GET', 'POST'])
+@app.route('/delete_proposal/<int:proposal_id>', methods=['GET', 'POST'])
 @login_required
-def delete_proposal(call_id):  # delete proposal (e.g. copy of someone's work)
+def delete_proposal(proposal_id):
+    """Удаление заявки из БД
+        Только для админов"""
     db_sess = db_session.create_session()
-    call = db_sess.query(Proposal).filter(Proposal.id == call_id).first()
-    if call:
-        db_sess.delete(call)
+    proposal = db_sess.query(Proposal).filter(Proposal.id == proposal_id).first()
+    if proposal:
+        db_sess.delete(proposal)
         db_sess.commit()
     else:
         abort(404)
-    return redirect('/calls')
-
-
+    return redirect('/proposals')
 
 """Сейчас не заработает из-за ошибок в полях с адресом"""
+
 
 def main():  # run program
     db_session.global_init("main.db")
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
     # app.run(port=port, debug=True)
+
 
 if __name__ == '__main__':
     main()
