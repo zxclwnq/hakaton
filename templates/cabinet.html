@@ -63,7 +63,7 @@
 
 {% else %}
     <h2> У вас нет заявок </h2>
-    {% if stage.can_make_proposes%}
+    {% if stage.can_make_proposes and current_user.access_level == 0%}
         <a href="/add_proposal">Добавить заявку</a>
     {% endif%}
 {% endif%}
