@@ -14,6 +14,8 @@ from forms.editcallform import EditCallForm
 from forms.textratingform import TextRatingForm
 from forms.videoratingform import VideoRatingForm
 from forms.loginform import LoginForm
+from forms.registerform import RegisterForm
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'abcdef'
@@ -82,6 +84,26 @@ def index():
     return render_template('main.html',stage=competition_stage,
                            total_proposals=len(total_proposals),
                            verified_proposes=len(verified_proposes))
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        if form.password.data != form.password_again.data:
+            return render_template('register.html', title='Регистрация',
+                                   form=form,
+                                   message="Пароли не совпадают")
+        db_sess = db_session.create_session()
+        if db_sess.query(User).filter(User.email == form.email.data).first():
+            return render_template('register.html', title='Регистрация',
+                                   form=form,
+                                   message="Такой пользователь уже есть")
+        user = User()
+        user.make_new(form.name.data,form.surname.data,form.email.data,form.password.data)
+        db_sess.add(user)
+        db_sess.commit()
+        return redirect('/login')
+    return render_template('register.html', title='Регистрация', form=form)
 
 
 @app.route('/add_proposal', methods=['GET', 'POST'])

@@ -1,7 +1,119 @@
-.dropdown:hover>.dropdown-menu {
-  display: block;
+ html{
+    font-size: 16px;
 }
 
-.dropdown>.dropdown-toggle:active {
-  pointer-events: none;
+.form-contact label {
+    font-size: 24px;
+}
+
+.navbar-link{
+    font-size: 22px;
+    color: #ffffff;
+    text-decoration : none;
+    padding: 5px 10px 5px 10px ;
+}
+
+.navbar-link:hover{
+    background: #f4f4f4;
+    color: #000000;
+    border-radius: 10px;
+}
+
+.title {
+    font-size: 16px;
+    text-align: center;
+}
+
+.navbar {
+    padding : 15px;
+    background-color : #141414
+}
+
+.link {
+    margin: 5px 10px 50px 10px ;
+    color: #000000;
+    text-decoration : none;
+
+}
+
+.new_link {
+    color: #000000;
+    text-decoration: none;
+    padding-top: 17px;
+}
+
+.new_link:hover{
+    color: silver;
+}
+
+.link:hover{
+    color: silver;
+}
+
+.table-dark {
+    text-align : center;
+    background-color : #141414;
+
+}
+
+.table_container {
+    padding-top: 25px;
+}
+.Current_name {
+    font-size: 22px;
+    color: #ffffff;
+    text-decoration : none;
+}
+
+.btn {
+    background: #000000;
+    color: #ffffff;
+    border-radius: 10px;
+}
+.btn:hover{
+    background: #000000;
+    color: #bbbbbb;
+    border-radius: 10px;
+}
+
+.anchor {
+    color: #000000;
+}
+
+.form-control {
+    width: 500px;
+    font-size: 25px;
+    width: 450px;
+}
+
+.inline {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    height:100%;
+    padding: 25px 0px 25px 0px;
+
+}
+
+.child_inline{
+    font-size: 25px;
+    flex-basis: 45%;
+}
+
+.make_border {
+    outline: 2px solid #000;
+    border-radius: 10px;
+}
+
+.navbar-link_MAIN{
+    font-size: 35px;
+    color: #ffffff;
+    text-decoration : none;
+    padding: 5px 10px 5px 10px ;
+}
+
+.navbar-link_MAIN:hover{
+
+    color: #ffffff;
+    border-radius: 10px;
 }

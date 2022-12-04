@@ -1,4 +1,5 @@
 import datetime
+import json
 import sqlalchemy
 from sqlalchemy import orm
 from flask_login import UserMixin
@@ -19,6 +20,18 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     email = sqlalchemy.Column(sqlalchemy.String,
                               index=True, unique=True, nullable=True)
     password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    proposals = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    @property
+    def proposals_list(self):
+        return json.loads(proposals)['proposals']
+
+    def make_new(self,name,surname,email,password):
+        self.name = name
+        self.surname = surname
+        self.set_password(password)
+        self.email = email
+        self.position = "user"
+        self.proposals = json.dumps({"proposals":[]})
 
     @property
     def access_level(self):
@@ -31,8 +44,8 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
         return level[self.position]
 
     def set_password(self, password):
-        self.password = password#generate_password_hash(password)
+        self.password = generate_password_hash(password)
 
     def check_password(self, password):
-        return self.password == password or check_password_hash(self.hashed_password, password)
+        return self.password == password or check_password_hash(self.password, password)
         #return check_password_hash(self.hashed_password, password)

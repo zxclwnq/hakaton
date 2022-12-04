@@ -7,100 +7,82 @@
     <a href = "{{proposal.file}}">Ссылка на работу</a>
     {% if proposal.type == "text" %}
         <h2>Параметры оценивания текста</h2>
-        <p>
-            {{ form.relevance.label }}<br>
-            {{ form.relevance(class="form-control") }}<br>
-
-        </p>
-        <p>
-            {{ form.integrity.label }}<br>
-            {{ form.integrity(class="form-control") }}<br>
-
-        </p>
-        <p>
-            {{ form.validity.label }}<br>
-            {{ form.validity(class="form-control") }}<br>
-
-        </p>
-        <p>
-            {{ form.resonance.label }}<br>
-            {{ form.resonance(class="form-control") }}<br>
-
-        </p>
-        <p>
-            {{ form.accuracy.label }}<br>
-            {{ form.accuracy(class="form-control") }}<br>
-
-        </p>
-        <p>
-            {{ form.ethnicity.label }}<br>
-            {{ form.ethnicity(class="form-control") }}<br>
-
-        </p>
-        <p>
-            {{ form.availability.label }}<br>
-            {{ form.availability(class="form-control") }}<br>
-
-        </p>
-        <p>
-            {{ form.materials_cycle.label }}<br>
-            {{ form.materials_cycle(class="form-control") }}<br>
-
-        </p>
+        <div class = "inline">
+            <p class = "child_inline"> {{ form.relevance.label }} </p>
+            <p class = "make_border">{{ form.relevance(class="form-control") }}</p>
+        </div>
+        <div class = "inline">
+            <p class = "child_inline"> {{ form.integrity.label }} </p>
+            <p class = "make_border">{{ form.integrity(class="form-control") }}</p>
+        </div>
+        <div class = "inline">
+            <p class = "child_inline"> {{ form.validity.label }} </p>
+            <p class = "make_border">{{ form.validity(class="form-control") }}</p>
+        </div>
+        <div class = "inline">
+            <p class = "child_inline"> {{ form.resonance.label }} </p>
+            <p class = "make_border">{{ form.resonance(class="form-control") }}</p>
+        </div>
+        <div class = "inline">
+            <p class = "child_inline"> {{ form.accuracy.label }} </p>
+            <p class = "make_border">{{ form.accuracy(class="form-control") }}</p>
+        </div>
+        <div class = "inline">
+            <p class = "child_inline"> {{ form.ethnicity.label }} </p>
+            <p class = "make_border">{{ form.ethnicity(class="form-control") }}</p>
+        </div>
+        <div class = "inline">
+            <p class = "child_inline"> {{ form.availability.label }} </p>
+            <p class = "make_border">{{ form.availability(class="form-control") }}</p>
+        </div>
+        <div class = "inline">
+            <p class = "child_inline"> {{ form.materials_cycle.label }} </p>
+            <p class = "make_border">{{ form.materials_cycle(class="form-control") }}</p>
+        </div>
     {% else %}
         <h2>Параметры оценивания видео</h2>
-        <p>
-            {{ form.expression_of_thought.label }}<br>
-            {{ form.expression_of_thought(class="form-control") }}<br>
-
-        </p>
-        <p>
-            {{ form.integrity.label }}<br>
-            {{ form.integrity(class="form-control") }}<br>
-
-        </p>
-        <p>
-            {{ form.personalized_character.label }}<br>
-            {{ form.personalized_character(class="form-control") }}<br>
-
-        </p>
-        <p>
-            {{ form.artistic_techniques.label }}<br>
-            {{ form.artistic_techniques(class="form-control") }}<br>
-
-        </p>
-        <p>
-            {{ form.operators_work.label }}<br>
-            {{ form.operators_work(class="form-control") }}<br>
-
-        </p>
+        <div class = "inline">
+            <p class = "child_inline"> {{ form.expression_of_thought.label }} </p>
+            <p class = "make_border">{{ form.expression_of_thought(class="form-control") }}</p>
+        </div>
+        <div class = "inline">
+            <p class = "child_inline"> {{ form.integrity.label }} </p>
+            <p class = "make_border">{{ form.integrity(class="form-control") }}</p>
+        </div>
+        <div class = "inline">
+            <p class = "child_inline"> {{ form.personalized_character.label }} </p>
+            <p class = "make_border">{{ form.personalized_character(class="form-control") }}</p>
+        </div>
+        <div class = "inline">
+            <p class = "child_inline"> {{ form.artistic_techniques.label }} </p>
+            <p class = "make_border">{{ form.artistic_techniques(class="form-control") }}</p>
+        </div>
+        <div class = "inline">
+            <p class = "child_inline"> {{ form.operators_work.label }} </p>
+            <p class = "make_border">{{ form.operators_work(class="form-control") }}</p>
+        </div>
     {% endif %}
     <h2>Параметры понижения оценки</h2>
-    <p>
-        {{ form.promotional_materials.label }}<br>
-        {{ form.promotional_materials(class="form-control") }}<br>
-
-    </p>
-    <p>
-        {{ form.journalistic_stamps.label }}<br>
-        {{ form.journalistic_stamps(class="form-control") }}<br>
-
-    </p>
-    <p>
-        {{ form.сustom_nature.label }}<br>
-        {{ form.сustom_nature(class="form-control") }}<br>
-
-    </p>
-    <p>
-        {{ form.grammatical_errors.label }}<br>
-        {{ form.grammatical_errors(class="form-control") }}<br>
-
-    </p>
-    <p>
-        {{ form.orthoepic_norms.label }}<br>
-        {{ form.orthoepic_norms(class="form-control") }}<br>
-
-    </p>
+    <div class = "inline">
+            <p class = "child_inline"> {{ form.promotional_materials.label }} </p>
+            <p class = "make_border">{{ form.promotional_materials(class="form-control") }}</p>
+        </div>
+    <div class = "inline">
+            <p class = "child_inline"> {{ form.journalistic_stamps.label }} </p>
+            <p class = "make_border">{{ form.journalistic_stamps(class="form-control") }}</p>
+        </div>
+    <div class = "inline">
+            <p class = "child_inline"> {{ form.сustom_nature.label }} </p>
+            <p class = "make_border">{{ form.сustom_nature(class="form-control") }}</p>
+        </div>
+    <div class = "inline">
+            <p class = "child_inline"> {{ form.grammatical_errors.label }} </p>
+            <p class = "make_border">{{ form.grammatical_errors(class="form-control") }}</p>
+        </div>
+    <div class = "inline">
+            <p class = "child_inline"> {{ form.orthoepic_norms.label }} </p>
+            <p class = "make_border">{{ form.orthoepic_norms(class="form-control") }}</p>
+    </div>
 
 
 
