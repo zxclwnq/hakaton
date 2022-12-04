@@ -151,7 +151,9 @@ def add_proposal():  # new proposal
 
     if competition_stage.can_make_proposes:
         if current_user.access_level !=0:
-            return render_template('locked.html', title='Вы не можете создавать заявки')
+            return render_template('locked.html', title='Вы не можете создавать заявки',
+                                   message='Пользователи отвечающие за проверку и администрацию сайта не могут '
+                                           'создавать заявки')
         form = AddProposalForm()
         if form.validate_on_submit():
             db_sess = db_session.create_session()
@@ -171,7 +173,7 @@ def add_proposal():  # new proposal
             return redirect("/cabinet")
         return render_template('add_proposal.html',form=form)
 
-    return render_template('locked.html', title='Страница не доступна')
+    return render_template('locked.html', title='Страница не доступна в данный момент')
 
 @app.route('/set_stage/<int:stage_id>', methods=['GET', 'POST'])
 @login_required
@@ -209,7 +211,7 @@ def view_proposal(proposal_id):
 @app.route('/proposals')
 def proposals():
     if competition_stage.result_table_state == 0:
-        return render_template('locked.html', title='Страница не доступна',
+        return render_template('locked.html', title='Страница не доступна в данный момент',
                                message="")
     elif competition_stage.result_table_state == 1:
         db_sess = db_session.create_session()
@@ -218,7 +220,7 @@ def proposals():
         return render_template('proposals_voting.html', proposals=proposals)
     elif competition_stage.result_table_state == 2:
         db_sess = db_session.create_session()
-        proposals = db_sess.query(Proposal).all()
+        proposals = db_sess.query(Proposal).order_by(Proposal.likes.desc()).all()
         db_sess.commit()
         return render_template('proposals.html', proposals=proposals)
     return render_template('locked.html', title='Произошла ошибка во время работы')

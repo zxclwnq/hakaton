@@ -1,7 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2 style="margin:20px">{{title}}</h2>
-<h6 style="margin:20px">{{message}}</h6>
-<a class = "anchor" style="margin: 20px" href="/">Вернуться на главную страницу</a>
+<style>
+.panel_news{
+    background-color: #EEEEEE;
+    box-shadow: 15px 20px 25px -13px #bababa;
+    border: 1.5px;
+    border-radius: 15px;
+    padding:20px;
+    margin:20px;
+}
+</style>
+<div class="panel_news">
+<h2 align="center" style="margin:20px">{{title}}</h2>
+<h6 align="center" style="margin:20px">{{message}}</h6>
+    <div align="center" style="margin:40px">
+<a class = "btn_dark"  href="/">Вернуться на главную страницу</a>
+</div>
+</div>
 {% endblock %}
