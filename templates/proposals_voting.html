@@ -9,7 +9,7 @@
 
 {% block content %}
 <meta charset="UTF-8">
-{% set STATUSES  = {"waiting_verification": "Ожидает оценивания", "verified": "Оценена", "aborted":  "Отменена"} %}
+
 {% set TYPES  = {"text": "Текстовая работа", "video": "Видео материал"} %}
 
 
@@ -26,13 +26,9 @@
             <td class="title" width="8%" bgcolor="#dddddd" align="center">Отдать голос</td>
         </tr>
         {% for proposal in proposals %}
-            {% if proposal.status != "verified" %}
-                {%  set color = "#dc143c" %}
-                {% set text_color = "#FFF0F5" %}
-            {% else %}
-                {% set color = "#d0daed"  %}
-                {% set text_color = "ffffff" %}
-            {% endif %}
+            {% set color = "#d0daed"  %}
+            {% set text_color = "ffffff" %}
+
         <tr class="my_row">
             <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">{{ proposal.id }}</td>
             <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ TYPES[proposal.type] }}</td>
@@ -40,22 +36,21 @@
             <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.theme }}</td>
             <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.annotation }}</td>
             <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">{{ proposal.likes }}</td>
-            {% if current_user.access_level >= 2  and proposal.can_be_rated(current_user.id)%}
+            {% if current_user.is_anonymous  or current_user.access_level < 2%}
+                <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">
+                    <div>       <a href="/proposals/view/{{ proposal.id }}" class="btn btn-warning" >+</a>
+                    </div>
+                </td>
+            {% elif current_user.access_level >= 2  and proposal.can_be_rated(current_user.id)%}
                 <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">
                         <div>       <a href="/proposals/rate/{{ proposal.id }}" class="btn btn-warning" >Оценить заявку</a>
                     </div>
                 </td>
-            {%else %}
-                <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">
-                        <div>       <a href="/proposals/view/{{ proposal.id }}" class="btn btn-warning" >Посмотреть заявку</a>
+            {% else %}
+            <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">
+                    <div>       <a href="/proposals/view/{{ proposal.id }}" class="btn btn-warning" >+</a>
                     </div>
                 </td>
-            {% endif %}
-            {% if current_user.access_level < 2 %}
-            <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">
-                <div>       <a href="/proposals/view/{{ proposal.id }}" class="btn btn-warning" >+</a>
-                </div>
-            </td>
             {% endif %}
         </tr>
         {% endfor %}

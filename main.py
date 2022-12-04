@@ -84,7 +84,19 @@ def index():
     return render_template('main.html',stage=competition_stage,
                            total_proposals=len(total_proposals),
                            verified_proposes=len(verified_proposes))
-
+@app.route('/cabinet', methods=['GET', 'POST'])
+@login_required
+def cabinet():
+    db_sess = db_session.create_session()
+    my_proposals_ids = current_user.proposals_list
+    my_proposals = []
+    for proposal_id in my_proposals_ids:
+        my_proposals.append(db_sess.query(Proposal).filter(Proposal.id == proposal_id).first())
+    return render_template('cabinet.html',
+                           stage=competition_stage,
+                           proposals=my_proposals,
+                           is_empty=len(my_proposals)==0, title='Мои ' \
+                                                                                                            'заявки')
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
@@ -107,6 +119,7 @@ def register():
 
 
 @app.route('/add_proposal', methods=['GET', 'POST'])
+@login_required
 def add_proposal():  # new proposal
     """Добавление заявки в БД"""
     global competition_stage
@@ -116,14 +129,18 @@ def add_proposal():  # new proposal
             db_sess = db_session.create_session()
             new_proposal = Proposal()
 
-            proposal_id = random.randint(100,1000)# создание рандомного id
             # заполнение пустой заявки данными из формы
-            new_proposal.make_proposal(proposal_id ,form.type.data, form.file.data, form.user_data)
-
+            new_proposal.make_proposal(form.type.data, form.file.data, form.user_data)
+            user = db_sess.query(User).filter(User.id == current_user.id).first()
             # добавление заявки в БД
             db_sess.add(new_proposal)
             db_sess.commit()
-            return redirect("/proposals")
+            # прикрепление заявки к пользователю
+            user.add_proposal(new_proposal.id)
+            db_sess.commit()
+
+
+            return redirect("/cabinet")
         return render_template('add_proposal.html',form=form)
     else:
         return render_template('locked.html', title='Страница не доступна')
@@ -133,7 +150,6 @@ def add_proposal():  # new proposal
 def set_stage(stage_id):
     global competition_stage
     competition_stage.set_stage(stage_id)
-    print(competition_stage.stage)
     return redirect('/')
 
 """ Оценка заявок экспертами """
@@ -168,7 +184,7 @@ def proposals():
         return render_template('locked.html', title='Страница не доступна')
     elif competition_stage.result_table_state == 1:
         db_sess = db_session.create_session()
-        proposals = db_sess.query(Proposal).all()
+        proposals = db_sess.query(Proposal).order_by(Proposal.likes.desc()).all()
         db_sess.commit()
         return render_template('proposals_voting.html', proposals=proposals)
     elif competition_stage.result_table_state == 2:

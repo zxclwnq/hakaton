@@ -43,14 +43,16 @@ class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
     @property
     def experts_list(self):
         """Возвращает список id экспертов проверявших эту работу"""
-        return json.loads(self.experts_rates)
+        return json.loads(self.experts_rates)["expert_ids"]
     @property
     def lowering_criteria_dict(self):
         """Возвращает словарь параметров понижения оценки"""
         return json.loads(self.lowering_criteria)
-
+    @property
+    def rated_at_least_one(self):
+        return len(self.experts_list) >= 1
     def can_be_rated(self, expert_id):
-        return self.status == "waiting_verification" and expert_id not in self.experts_list['expert_ids']
+        return self.status == "waiting_verification" and expert_id not in self.experts_list
 
     @property
     def average_score(self):
@@ -96,14 +98,13 @@ class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
         :param expert_id: id эксперта
         """
 
-        experts_list = self.experts_list["expert_ids"]
+        experts_list = self.experts_list
         experts_list.append(expert_id)
         if len(experts_list) == self.max_rates:
             self.change_status('verified')
         self.experts_rates = json.dumps({"expert_ids" :experts_list})
     def make_proposal(
             self,
-            id: int,
             type: str,
             file: str,
             user_data: dict):
@@ -114,7 +115,6 @@ class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
         :param file прикрепленный файл заявки
         :param user_data личные данные пользователя
         """
-        self.id = id
         self.type = type
         self.file = file
         if type == 'text':

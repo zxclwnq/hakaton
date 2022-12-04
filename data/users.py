@@ -23,7 +23,12 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     proposals = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     @property
     def proposals_list(self):
-        return json.loads(proposals)['proposals']
+        return json.loads(self.proposals)['proposals']
+
+    def add_proposal(self,proposal_id):
+        proposals_list = self.proposals_list
+        proposals_list.append(proposal_id)
+        self.proposals = json.dumps({"proposals":proposals_list})
 
     def make_new(self,name,surname,email,password):
         self.name = name
