@@ -9,7 +9,6 @@ from tables import evaluation_table_video_default, evaluation_table_text_default
 
 class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'proposal'
-    max_rates = 3
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)
@@ -51,9 +50,12 @@ class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
     @property
     def rated_at_least_one(self):
         return len(self.experts_list) >= 1
-    def can_be_rated(self, expert_id):
-        return self.status == "waiting_verification" and expert_id not in self.experts_list
 
+    def can_be_rated(self, expert_id):
+        return expert_id not in self.experts_list
+
+    def inc_likes(self):
+        self.likes +=1
     @property
     def average_score(self):
         """Возвращает среднюю оценку заявки
@@ -100,8 +102,7 @@ class Proposal(SqlAlchemyBase, UserMixin, SerializerMixin):
 
         experts_list = self.experts_list
         experts_list.append(expert_id)
-        if len(experts_list) == self.max_rates:
-            self.change_status('verified')
+        self.change_status('verified')
         self.experts_rates = json.dumps({"expert_ids" :experts_list})
     def make_proposal(
             self,

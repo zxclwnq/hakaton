@@ -9,6 +9,7 @@ from classes.stage import Stage
 from data import db_session
 from data.proposals import Proposal
 from data.users import User
+from data.voting import Vote
 from forms.addproposalform import AddProposalForm
 from forms.editcallform import EditCallForm
 from forms.textratingform import TextRatingForm
@@ -197,6 +198,23 @@ def proposals():
 @app.route('/proposals/vote/<int:proposal_id>', methods=['GET', 'POST'])
 @login_required
 def vote_proposal(proposal_id):
+    if current_user.access_level != 0:
+        return render_template('locked.html', title="Вы не можете принимать участие в голосовании")
+    if proposal_id in current_user.proposals_list:
+        return render_template('locked.html', title="Вы не можете проголосовать за свою работу")
+    db_sess = db_session.create_session()
+    votes = db_sess.query(Vote).filter(Vote.proposal_id == proposal_id).all()
+    if current_user.id in [votes[i].user_id for i in range(len(votes))]:
+        return render_template('locked.html', title="Вы уже голосовали за эту работу")
+    new_vote = Vote(user_id=current_user.id,
+                    proposal_id=proposal_id)
+    db_sess.add(new_vote)
+    proposal = db_sess.query(Proposal).filter(Proposal.id == proposal_id).first()
+    proposal.inc_likes()
+    db_sess.commit()
+    return render_template('locked.html', title="Ваш голос зачтен")
+
+
 
 
 @app.route('/delete_proposal/<int:proposal_id>', methods=['GET', 'POST'])
