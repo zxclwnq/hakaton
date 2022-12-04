@@ -11,21 +11,31 @@
 <meta charset="UTF-8">
 
 {% set TYPES  = {"text": "Текстовая работа", "video": "Видео материал"} %}
+<style>
+.panel_news{
+    background-color: #EEEEEE;
+    box-shadow: 15px 20px 25px -13px #bababa;
+    border: 1.5px;
+    border-radius: 15px;
+    padding:20px;
+    margin:20px;
+}
+</style>
+<h2 align="center" style = "padding: 25px">{{current_user.name}} {{current_user.surname}}</h2>
 
-
-<h2 align="center">Мои заявки</h2>
+<h2 align="center" style = "padding: 25px">Мои заявки</h2>
 {% if not is_empty%}
-<div class="table_container">
-    <table class="my_table">
+<div class="table_container panel_news">
+     <table class="table table-striped table-hover">
         <tr class="my_row">
-            <td class="title" width="2%" bgcolor="#dddddd" align="center">Id</td>
-            <td class="title" width="5%" bgcolor="#dddddd" align="center">Тип работы</td>
-            <td class="title" width="25%" bgcolor="#dddddd" align="center">Ссылка на работу</td>
-            <td class="title" width="25%" bgcolor="#dddddd" align="center">Тема работы</td>
-            <td class="title" width="6%" bgcolor="#dddddd" align="center">Голоса</td>
-            <td class="title" width="6%" bgcolor="#dddddd" align="center">Статус</td>
-            <td class="title" width="6%" bgcolor="#dddddd" align="center">Средняя оценка</td>
-            <td class="title" width="8%" bgcolor="#dddddd" align="center">Действие</td>
+            <td class="table-dark" width="2%" bgcolor="#dddddd" align="center">Id</td>
+            <td class="table-dark" width="5%" bgcolor="#dddddd" align="center">Тип работы</td>
+            <td class="table-dark" width="25%" bgcolor="#dddddd" align="center">Ссылка на работу</td>
+            <td class="table-dark" width="25%" bgcolor="#dddddd" align="center">Тема работы</td>
+            <td class="table-dark" width="6%" bgcolor="#dddddd" align="center">Голоса</td>
+            <td class="table-dark" width="6%" bgcolor="#dddddd" align="center">Статус</td>
+            <td class="table-dark" width="6%" bgcolor="#dddddd" align="center">Средняя оценка</td>
+            <td class="table-dark" width="8%" bgcolor="#dddddd" align="center">Действие</td>
         </tr>
 
         {% for proposal in proposals %}
@@ -34,7 +44,7 @@
         <tr class="my_row">
             <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">{{ proposal.id }}</td>
             <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ TYPES[proposal.type] }}</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}"><a href="{{proposal.file}}"> Работа №{{proposal.id}}</a></td>
+            <td><a class="anchor" href="{{proposal.file}}">Работа №{{ proposal.id }}</a></td>
             <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.theme }}</td>
             <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">{{ proposal.likes }}</td>
             <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">{{ STATUSES[proposal.status] }}</td>
@@ -47,7 +57,7 @@
             </td>
             <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">
                 {% if proposal.rated_at_least_one%}
-                <div>       <a href="/proposals/view/{{ proposal.id }}" class="btn btn-warning">Посмотреть результаты</a>
+                <div class="btn_dark">       <a href="/proposals/view/{{ proposal.id }}" style = "text-decoration : none; color: #ffffff" >Посмотреть результаты</a>
                 </div>
                 {% else %}
                 <div>   Еще не один эксперт не проверил работу
@@ -55,16 +65,41 @@
                 {% endif %}
             </td>
         </tr>
+
         {% endfor %}
 
     </table>
+    <div align="center" style="padding: 10px 0px">
+                    <a align="center" href="/add_proposal " class="btn_dark" style="padding: .5% 10%" >+</a>
+                </div>
 </div>
 
 
 {% else %}
-    <h2> У вас нет заявок </h2>
+<div class="panel_news">
+<h2 style="text-align: center"> У вас нет заявок </h2>
+<div class="table_container">
+     <table class="table table-striped table-hover">
+        <tr class="my_row">
+            <td class="table-dark" width="2%" bgcolor="#dddddd" align="center">Id</td>
+            <td class="table-dark" width="5%" bgcolor="#dddddd" align="center">Тип работы</td>
+            <td class="table-dark" width="25%" bgcolor="#dddddd" align="center">Ссылка на работу</td>
+            <td class="table-dark" width="25%" bgcolor="#dddddd" align="center">Тема работы</td>
+            <td class="table-dark" width="6%" bgcolor="#dddddd" align="center">Голоса</td>
+            <td class="table-dark" width="6%" bgcolor="#dddddd" align="center">Статус</td>
+            <td class="table-dark" width="6%" bgcolor="#dddddd" align="center">Средняя оценка</td>
+            <td class="table-dark" width="8%" bgcolor="#dddddd" align="center">Действие</td>
+        </tr>
+     </table>
+</div>
+
+            <div align="center" style="padding: 10px 0px">
+                    <a align="center" href="/add_proposal " class="btn_dark" style="padding: .5% 10%" >+</a>
+                </div>
+</div>
+
     {% if stage.can_make_proposes and current_user.access_level == 0%}
-        <a href="/add_proposal">Добавить заявку</a>
+
     {% endif%}
 {% endif%}
 

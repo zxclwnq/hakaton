@@ -1,8 +1,0 @@
-Разделение админов и экспертов
-Админ может удалять
-Эксперты нет
-
-class="btn btn-secondary"
-{% if current_user.is_authenticated %}
-    <a href="/add_call" class="btn btn-secondary">Новое сообщение</a>
-{% endif %}

@@ -13,17 +13,23 @@
 {% set TYPES  = {"text": "Текстовая работа", "video": "Видео материал"} %}
 
 
-<h2 align="center">Таблица заявок</h2>
+<h2 align="center" style = "padding: 25px 25px 25px 25px">Таблица заявок</h2>
 <div class="table_container">
-    <table class="my_table">
+    <table class="table table-striped table-hover">
         <tr class="my_row">
-            <td class="title" width="4%" bgcolor="#dddddd" align="center">Id</td>
-            <td class="title" width="5%" bgcolor="#dddddd" align="center">Тип работы</td>
-            <td class="title" width="8%" bgcolor="#dddddd" align="center">Ссылка на работу</td>
-            <td class="title" width="25%" bgcolor="#dddddd" align="center">Тема работы</td>
-            <td class="title" width="35%" bgcolor="#dddddd" align="center">Аннотация к работе</td>
-            <td class="title" width="6%" bgcolor="#dddddd" align="center">Голоса</td>
-            <td class="title" width="8%" bgcolor="#dddddd" align="center">Отдать голос</td>
+            <td class="table-dark" width="4%" bgcolor="#dddddd" align="center">Id</td>
+            <td class="table-dark" width="5%" bgcolor="#dddddd" align="center">Тип работы</td>
+            <td class="table-dark" width="8%" bgcolor="#dddddd" align="center">Ссылка на работу</td>
+            <td class="table-dark" width="25%" bgcolor="#dddddd" align="center">Тема работы</td>
+            <td class="table-dark" width="35%" bgcolor="#dddddd" align="center">Аннотация к работе</td>
+            <td class="table-dark" width="6%" bgcolor="#dddddd" align="center">Голоса</td>
+            <td class="table-dark" width="8%" bgcolor="#dddddd" align="center">
+                {% if current_user.is_anonymous  or current_user.access_level < 2 %}
+                Отдать голос
+                {% else %}
+                Оценить работу
+                {% endif%}
+            </td>
         </tr>
         {% for proposal in proposals %}
             {% set color = "#d0daed"  %}
@@ -32,25 +38,24 @@
         <tr class="my_row">
             <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">{{ proposal.id }}</td>
             <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ TYPES[proposal.type] }}</td>
-            <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}"><a href="{{proposal.file}}"> Работа №{{proposal.id}}</a></td>
+            <td ><a class="anchor" href="{{proposal.file}}"> Работа №{{proposal.id}}</a></td>
             <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.theme }}</td>
             <td class="ordinary" bgcolor ={{color}} style="color:{{text_color}}">{{ proposal.annotation }}</td>
             <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">{{ proposal.likes }}</td>
             {% if current_user.is_anonymous  or current_user.access_level < 2%}
                 <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">
-                    <div>       <a href="/proposals/vote/{{ proposal.id }}" class="btn btn-warning" >+</a>
+                    <div>       <a href="/proposals/vote/{{ proposal.id }}" class="btn_dark" >+</a>
                     </div>
                 </td>
             {% elif current_user.access_level >= 2  and proposal.can_be_rated(current_user.id)%}
                 <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">
-                        <div>       <a href="/proposals/rate/{{ proposal.id }}" class="btn btn-warning" >Оценить заявку</a>
-                    </div>
+                        <div class="btn_dark"> <a href="/proposals/rate/{{ proposal.id }}" style = "text-decoration : none; color: #ffffff"  >Оценить работу</a>
+                        </div>
                 </td>
-            {% else %}
+            {% else%}
             <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">
-                    <div>       <a href="/proposals/vote/{{ proposal.id }}" class="btn btn-warning" >+</a>
-                    </div>
-                </td>
+                Работа была оценена
+            </td>
             {% endif %}
         </tr>
         {% endfor %}

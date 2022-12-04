@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/png" href="/static/favicon.svg" />
+    <link rel="icon" type="image/png" href="/static/2.ico" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
@@ -14,15 +14,21 @@
   <body>
     <header>
         <nav class="navbar">
-          <h1 style="color:#ffffff"><a class="navbar-link_MAIN" href="/">ТВОРЧЕСКИЙ КОНКУРС ЖУРНАЛИСТОВ</a> </h1>
-
+            <div>
+                <h1 style="color:#ffffff"><a class="navbar-link_MAIN" href="/">ТВОРЧЕСКИЙ КОНКУРС ЖУРНАЛИСТОВ</a> </h1>
+                <h3 style="color:#ffffff" class = "navbar_notlink">Министерство региональной и информационной политики<br> Оренбургской области</h3>
+            </div>
           <a class="navbar-link" href="/proposals">Работы участников</a>
           <a class="navbar-link" href="/add_proposal">Подать заявку</a>
             {% if current_user.is_authenticated %}
-            <a href="/cabinet" style="color:#ffffff" class="Current_name" >{{current_user.name}} {{current_user.surname}}</a>
-            <a class="navbar-link" href="/logout">Выход</a>
+            <div style="margin:0px 10px 0px 0px" class="dropdown">
+                <button class="dropbtn">Личный кабинет</button>
+                <div class="dropdown-content">
+                    <a href="/cabinet">Мои заявки</a>
+                    <a href="/logout">Выход</a> </div>
+            </div>
             {% else %}
-            <a class="navbar-link" href="/login">Войти</a>
+            <a class="navbar-link" href="/login" style="margin:0px 10px 0px 0px">Войти</a>
             {% endif %}
         </nav>
     </header>

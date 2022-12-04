@@ -7,132 +7,84 @@
 
 {% block content %}
 {% set STAGE = {1:"Ожидается запуск",2:"Прием заявок",3:"Независимая экспертиза",4:"Завершение конкурса"}%}
-{% if current_user.access_level == 3 %}
-
 <style>
 .ordinary {
     background-color: #d0daed;
 }
 .parent {
   display: flex;
-  align-items: flex-start;
+  margin: 20px;
+  justify-content: space-between;
+  width: 60%;
   height: 100%;
 }
 .child-active {
-  background-color: green
+  background-color: silver;
+
+  box-shadow: 13px 13px 7px -6px #b0b0b0;
+  color: #141414;
+}
+.child-active:hover {
+  background-color: #D3D3D3;
+  color: #616161;
+}
 }
 .child {
+
   width: 40%;
   height: 40%;
 }
+.panel{
+    margin:5px;
+    box-shadow: 15px 20px 25px -13px #bababa;
+    background-color: #e3e3e3;
+    border: 1.5px;
+    border-radius: 15px;
+    padding:10px;
+}
+.panel_news{
+    background-color: #EEEEEE;
+    box-shadow: 15px 20px 25px -13px #bababa;
+    border: 1.5px;
+    border-radius: 15px;
+    padding:20px;
+    margin:20px;
+}
 </style>
-    <h1>Панель управления</h1>
-    <table class="my_table">
+{% if current_user.access_level == 3 %}
+
+
+    <div class="panel">
+    <h1 style="padding:25px 25px 0px 25px">Панель управления</h1>
+    <div class="table_container">
+    <table class="table table-hover">
         <tr class="my_row">
-            <td class="title" width="5%" bgcolor="#dddddd" align="center">Текущая стадия конкурса</td>
-            <td class="title" width="5%" bgcolor="#dddddd" align="center">Общее количество работ</td>
-            <td class="title" width="5%" bgcolor="#dddddd" align="center">Количество оцененных работ</td>
+            <td class="table-dark" width="5%" bgcolor="#dddddd" align="center">Текущая стадия конкурса</td>
+            <td class="table-dark" width="5%" bgcolor="#dddddd" align="center">Общее количество работ</td>
+            <td class="table-dark" width="5%" bgcolor="#dddddd" align="center">Количество оцененных работ</td>
         </tr>
         <tr class="my_row">
-            <td class="ordinary" align="center" style="color:{{text_color}}">{{ STAGE[stage.stage] }}</td>
-            <td class="ordinary" align="center" style="color:{{text_color}}">{{ total_proposals }}</td>
+            <td bgcolor="red" align="center" style="color:{{text_color}}">{{ STAGE[stage.stage] }}</td>
+            <td class="table-red" align="center" style="color:{{text_color}}">{{ total_proposals }}</td>
             <td class="ordinary" align="center" style="color:{{text_color}}">{{ verified_proposes }}</td>
         </tr>
     </table>
+    </div>
     <h2>Установить этап конкурса:</h2>
     <div class="parent">
-        <a class="{{'btn btn-secondary'+ (stage.stage == 1) *' child-active'}}"href="/set_stage/1" >"Ожидается запуск"</a>
-        <a href="/set_stage/2" class="{{'btn btn-secondary'+ (stage.stage == 2) *' child-active'}}" *"child-active"}}">"Прием заявок"</a>
-        <a href="/set_stage/3" class="{{'btn btn-secondary'+ (stage.stage == 3) *' child-active'}}">"Независимая экспертиза"</a>
-        <a href="/set_stage/4" class="{{'btn btn-secondary'+ (stage.stage == 4) *' child-active'}}">"Завершение конкурса"</a>
+        <a class="{{'btn_dark'+ (stage.stage == 1) *' child-active'}}"href="/set_stage/1" >"Ожидается запуск"</a>
+        <a href="/set_stage/2" class="{{'btn_dark'+ (stage.stage == 2) *' child-active'}}" *"child-active"}}">"Прием заявок"</a>
+        <a href="/set_stage/3" class="{{'btn_dark'+ (stage.stage == 3) *' child-active'}}">"Независимая экспертиза"</a>
+        <a href="/set_stage/4" class="{{'btn_dark'+ (stage.stage == 4) *' child-active'}}">"Завершение конкурса"</a>
+    </div>
+    <h2>Добавить проверяющих экспертов:</h2>
+    <div class="parent">
+    <a class="btn_dark" href="add_expert" style="margin:0px, 20px,20px,20px">Зарегистрировать эксперта</a>
+    </div>
     </div>
 {% endif%}
-{% if stage.stage >=4%}
-<div>
-<h2 style="margin:20px">
-    Экспертиза работ и народное голосование завершено
-</h2>
-<p>
-    <h5>Награждение участников конкурса</h5>
-    Главной наградой для победителя конкурса является:<br>
-</p>
-<p>
-    <h5>1 место.</h5>
-    Диплом от Министерства региональной и информационной политики Оренбургской области за победу в конкурсе.<br>
-    Генеральная премия для авторов от Министерства региональной и информационной политики Оренбургской области<br>
-</p>
-<p>
-    <h5>2 место.</h5>
-    Диплом от Министерства региональной и информационной политики Оренбургской области за победу в конкурсе.<br>
-    Премия для авторов от Министерства региональной и информационной политики Оренбургской области<br>
-</p>
-<p>
-    <h5>3 место.</h5>
-    Диплом от Министерства региональной и информационной политики Оренбургской области за победу в конкурсе.<br>
-    Премия для авторов от Министерства региональной и информационной политики Оренбургской области<br>
-</p>
-<p>
-    <h5>Гран-при конкурса «Твой шанс»!</h5>
-    Награждается победитель народного голосования <br>
-    Диплом от Министерства региональной и информационной политики Оренбургской области за победу в конкурсе.<br>
-    Премия для авторов от Министерства региональной и информационной политики Оренбургской области<br>
-</p>
-<p>
-    Результаты оценивания можно посмотреть в общей таблице
-</p>
-</div>
-{% endif%}
-{% if stage.stage >=3%}
-<div>
-<h2 style="margin:20px">
-    Начало экспертизы поданных заявок и народного голосования
-</h2>
-<p>
-    Подача заявок завершена <br>
-    <h5>Дата экспертизы и народного голосования:</h5>
-<p>
-    Заявки принимаются с <b>20 декабря 2022 г</b><br>
-    Прием заявок проходить до <b>31 декабря 2022 г</b>
-</p>
-</p>
-<p>
-    Экспертиза заявок будет проходить в течение двух недель паралельно
-    будет проходить народное голосование
-</p>
-</div>
-{% endif%}
-{% if stage.stage >=2%}
-<div>
-<h2 style="margin:20px">
-    Начало приема заявок
-</h2>
-<h5>Дата приема заявок:</h5>
-<p>
-    Заявки принимаются с <b>15 декабря 2022 г</b><br>
-    Прием заявок проходить до <b>20 декабря 2022 г</b>
-</p>
-    </div>
-{% endif%}
-{% if stage.stage >=1%}
-<div>
-<h2 style="margin:20px">
-    Творческий конкурс журналистов "Твой шанс"
-</h2>
-<h5>Учредители конкурса:</h5>
-<p>
-    Министерство региональной и информационной политики Оренбургской области <br>
-    Даты проведения:<br>
-    <b>С 5 декабря по 31 декабря 2022 г. <br></b>
-    (Заявки принимаются с <b>15 декабря 2022 г</b> )
-</p>
-<h5>Цели и задачи конкурса:</h5>
-<p>
-    - Привлечение большего внимания к журналистке.<br>
-    - Помощь в продвижении качественно журналистского материала.<br>
-    - Поддержка авторов в создании статей и видео материалов.<br>
-</p>
-</div>
-{% endif%}
+{% block news %}
+{% endblock %}
 
 
 {% endblock %}

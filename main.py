@@ -10,6 +10,7 @@ from data import db_session
 from data.proposals import Proposal
 from data.users import User
 from data.voting import Vote
+from forms.addexpertform import AddExpertForm
 from forms.addproposalform import AddProposalForm
 from forms.editcallform import EditCallForm
 from forms.textratingform import TextRatingForm
@@ -74,7 +75,29 @@ def logout():  # exit
     logout_user()
     return redirect("/")
 
+@app.route('/add_expert', methods=['GET', 'POST'])
+@login_required
+def add_expert():
+    if current_user.access_level == 3:
+        form = AddExpertForm()
+        if form.validate_on_submit():
+            if form.password.data != form.password_again.data:
+                return render_template('register.html', title='Регистрация эксперта',
+                                       form=form,
+                                       message="Пароли не совпадают")
+            db_sess = db_session.create_session()
+            if db_sess.query(User).filter(User.email == form.email.data).first():
+                return render_template('register.html', title='Регистрация эксперта',
+                                       form=form,
+                                       message="Такой пользователь уже есть")
+            user = User()
+            user.make_new(form.name.data,form.surname.data,form.email.data,form.password.data,"expert")
+            db_sess.add(user)
+            db_sess.commit()
+            return render_template('locked.html', title="Аккаунт эксперта успешно создан")
 
+        return render_template('register.html', title='Регистрация эксперта', form=form)
+    return  render_template('locked.html', title="Недостаточно прав")
 @app.route('/')
 def index():
     """Запуск основой страцицы"""
@@ -82,7 +105,7 @@ def index():
     total_proposals = db_sess.query(Proposal).all()
     db_sess.commit()
     verified_proposes = db_sess.query(Proposal).filter(Proposal.status == "verified").all()
-    return render_template('main.html',stage=competition_stage,
+    return render_template('news.html',stage=competition_stage,
                            total_proposals=len(total_proposals),
                            verified_proposes=len(verified_proposes))
 @app.route('/cabinet', methods=['GET', 'POST'])
@@ -96,8 +119,9 @@ def cabinet():
     return render_template('cabinet.html',
                            stage=competition_stage,
                            proposals=my_proposals,
-                           is_empty=len(my_proposals)==0, title='Мои ' \
-                                                                                                            'заявки')
+                           is_empty=len(my_proposals)==0)
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
@@ -112,7 +136,7 @@ def register():
                                    form=form,
                                    message="Такой пользователь уже есть")
         user = User()
-        user.make_new(form.name.data,form.surname.data,form.email.data,form.password.data)
+        user.make_new(form.name.data,form.surname.data,form.email.data,form.password.data,"user")
         db_sess.add(user)
         db_sess.commit()
         return redirect('/login')
@@ -124,7 +148,10 @@ def register():
 def add_proposal():  # new proposal
     """Добавление заявки в БД"""
     global competition_stage
+
     if competition_stage.can_make_proposes:
+        if current_user.access_level !=0:
+            return render_template('locked.html', title='Вы не можете создавать заявки')
         form = AddProposalForm()
         if form.validate_on_submit():
             db_sess = db_session.create_session()
@@ -143,8 +170,8 @@ def add_proposal():  # new proposal
 
             return redirect("/cabinet")
         return render_template('add_proposal.html',form=form)
-    else:
-        return render_template('locked.html', title='Страница не доступна')
+
+    return render_template('locked.html', title='Страница не доступна')
 
 @app.route('/set_stage/<int:stage_id>', methods=['GET', 'POST'])
 @login_required
@@ -182,7 +209,8 @@ def view_proposal(proposal_id):
 @app.route('/proposals')
 def proposals():
     if competition_stage.result_table_state == 0:
-        return render_template('locked.html', title='Страница не доступна')
+        return render_template('locked.html', title='Страница не доступна',
+                               message="")
     elif competition_stage.result_table_state == 1:
         db_sess = db_session.create_session()
         proposals = db_sess.query(Proposal).order_by(Proposal.likes.desc()).all()

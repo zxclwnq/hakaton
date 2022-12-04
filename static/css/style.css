@@ -26,7 +26,8 @@
 
 .navbar {
     padding : 15px;
-    background-color : #141414
+    background: transparent;
+    background-image: url(/static/1.jpg);
 }
 
 .link {
@@ -87,9 +88,7 @@
 }
 
 .inline {
-    display: flex;
-    flex-wrap: wrap;
-    align-content: center;
+
     height:100%;
     padding: 25px 0px 25px 0px;
 
@@ -116,4 +115,107 @@
 
     color: #ffffff;
     border-radius: 10px;
+}
+
+.btn_dark {
+    box-shadow: 15px 20px 25px -13px #bababa;
+    background-color: #141414;
+    padding: 5px 15px 10px 15px;
+    text-decoration : none;
+    color: #ffffff;
+    border-radius: 10px;
+    background-color: #444444;
+
+}
+
+.btn_dark:hover {
+    text-decoration : none;
+    color: silver;
+    border-radius: 15px;
+
+}
+
+.dropbtn {
+  background-color: #141414;
+  color: white;
+  padding: 5px 10px 5px 10px ;
+  font-size: 24px;
+  border: none;
+  border-radius: 10px 10px 0px 0px;
+  background-color: transparent;
+}
+
+
+.dropdown {
+
+  position: relative;
+  display: inline-block;
+}
+
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  min-width: 100%;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+
+.dropdown:hover .dropdown-content {
+    text-color: #141414;
+    display: block;
+}
+
+
+.dropdown:hover .dropbtn {
+    background-color: #ffffff;
+    color: #141414
+}
+
+.RadioButton {
+    font-size: 23px;
+    color: #000;
+    border-radius: 15px;
+    list-style-type: none;
+    width: 30%
+}
+
+.btn_dark_big {
+    box-shadow: 15px 20px 25px -13px #bababa;
+    font-size: 25px;
+    background-color: #141414;
+    text-align: center;
+    padding: 10px 25px 10px 25px;
+    margin: 10px 0px 30px 0px;
+    text-decoration : none;
+    color: #ffffff;
+    border-radius: 15px;
+
+}
+
+.btn_dark_big:hover {
+    text-decoration : none;
+    color: silver;
+    border-radius: 15px;
+
+}
+
+.navbar_notlink {
+    font-size: 15px;
+    color: #ffffff;
+    text-decoration : none;
+    padding: 5px 10px 5px 15px ;
 }
