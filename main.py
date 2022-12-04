@@ -198,7 +198,8 @@ def eval_proposal(proposal_id): # Оценивание заявок экспер
         lowering_ratings["expert"] = f"{current_user.surname} {current_user.name}"
         current_proposal.verify_proposal(ratings,lowering_ratings,current_user.id)
         db_sess.commit()
-        return redirect("/")
+        return render_template('locked.html', title=f'Заявка № {current_proposal.id} успешно оценена',
+                               message="")
     return render_template("evaluate_proposal.html",proposal=current_proposal,form=form)
 
 @app.route('/proposals/view/<int:proposal_id>', methods=['GET', 'POST'])

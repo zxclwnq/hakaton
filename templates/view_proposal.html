@@ -20,9 +20,9 @@
 {% set STATUSES  = {"waiting_verification": "Требует оценки", "verified": "Оценена", "aborted":  "Отклонена"} %}
 
 
-<h2 align="center">Заявка № {{proposal.id}}</h2>
+<h2 align="center" style="margin:10px">Заявка № {{proposal.id}}</h2>
 <br>
-<h2 align="center">  <a href="{{proposal.file}} " class = "link"> Ссылка на работу</a></h2>
+<h2 align="center">  <a  href="{{proposal.file}} " class = "btn_dark"> Ссылка на работу</a></h2>
 {% for expert_rating in proposal.merge_ratings %}
 {% set RATINGS = expert_rating[0]%}
 {% set LOW_RATINGS = expert_rating[1]%}
@@ -152,7 +152,7 @@
 
 
 {% endfor %}
-<div class="total">
+<div class="total txt_dark" >
     <h2>
         Итоговая оценка: {{proposal.average_score}}
     </h2>
