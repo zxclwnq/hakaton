@@ -38,7 +38,7 @@
             <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">{{ proposal.likes }}</td>
             {% if current_user.is_anonymous  or current_user.access_level < 2%}
                 <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">
-                    <div>       <a href="/proposals/view/{{ proposal.id }}" class="btn btn-warning" >+</a>
+                    <div>       <a href="/proposals/vote/{{ proposal.id }}" class="btn btn-warning" >+</a>
                     </div>
                 </td>
             {% elif current_user.access_level >= 2  and proposal.can_be_rated(current_user.id)%}
@@ -48,7 +48,7 @@
                 </td>
             {% else %}
             <td class="ordinary" bgcolor ={{color}} align="center" style="color:{{text_color}}">
-                    <div>       <a href="/proposals/view/{{ proposal.id }}" class="btn btn-warning" >+</a>
+                    <div>       <a href="/proposals/vote/{{ proposal.id }}" class="btn btn-warning" >+</a>
                     </div>
                 </td>
             {% endif %}

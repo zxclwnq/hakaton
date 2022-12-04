@@ -194,6 +194,10 @@ def proposals():
         return render_template('proposals.html', proposals=proposals)
     return render_template('locked.html', title='Произошла ошибка во время работы')
 
+@app.route('/proposals/vote/<int:proposal_id>', methods=['GET', 'POST'])
+@login_required
+def vote_proposal(proposal_id):
+
 
 @app.route('/delete_proposal/<int:proposal_id>', methods=['GET', 'POST'])
 @login_required
