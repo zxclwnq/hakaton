@@ -1,12 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div align="center" style="margin: 10px 0px 0px 0px" >
 <h1>Оценка работы экспертом</h1>
+</div>
 <form action="" method="post">
     {{ form.hidden_tag() }}
-    <a href = "{{proposal.file}}">Ссылка на работу</a>
-    {% if proposal.type == "text" %}
-        <h2>Параметры оценивания текста</h2>
+    <div align="center" style="margin:30px 0px 30px 0px">
+    <a class="btn_dark"   href = "{{proposal.file}}">Ссылка на работу</a>
+    </div>
+        {% if proposal.type == "text" %}
+        <h2>Параметры оценивания текстовой работы:</h2>
         <div class = "inline">
             <p class = "child_inline"> {{ form.relevance.label }} </p>
             <p class = "make_border">{{ form.relevance(class="form-control") }}</p>
@@ -40,7 +44,7 @@
             <p class = "make_border">{{ form.materials_cycle(class="form-control") }}</p>
         </div>
     {% else %}
-        <h2>Параметры оценивания видео</h2>
+        <h2>Параметры оценивания видеоматериала:</h2>
         <div class = "inline">
             <p class = "child_inline"> {{ form.expression_of_thought.label }} </p>
             <p class = "make_border">{{ form.expression_of_thought(class="form-control") }}</p>
@@ -86,6 +90,6 @@
 
 
 
-    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    <p>{{ form.submit(type="submit", class="btn_dark") }}</p>
 </form>
 {% endblock %}
