@@ -35,9 +35,6 @@ def load_user(user_id):  # find user in database
     return db_sess.query(User).get(user_id)
 
 
-
-
-
 def get_proposal(proposal_id):
     db_sess = db_session.create_session()
     curr_proposal = db_sess.query(Proposal).filter(Proposal.id == proposal_id).first()
